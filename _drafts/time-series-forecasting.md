@@ -73,11 +73,11 @@ def iterative_forecast(model, x, window, H):
 
 To understand the disadvantage of this method a bit better, it helps to go back to the original goal of our problem. What we are really trying to do is to approximate $$\mathbb{P}\left[ Y \| X \right]$$ where $$Y \in \mathbb{R}^H$$ and $$X \in \mathbb{R}^n$$. We can visualize this distribution by using a graphical model. In the case $$n = 2$$ the distribution of the time series data can be represented as follows
 
-![]({{ BASE_PATH }}/images/2016_06_30/ts-graphical-model.jpg)
+![]({{ BASE_PATH }}/images/2016_06_30/ts-graphical-model.png)
 
 Now, the distribution of our approximation is actually a bit different and looks more like this:
 
-![]({{ BASE_PATH }}/images/2016_06_30/ts-iterated-prediction.jpg)
+![]({{ BASE_PATH }}/images/2016_06_30/ts-iterated-prediction.png)
 
 The iterated strategy returns an unbiased estimator of $$\mathbb{P}\left[Y \| X\right]$$ since it preserves the stochastic dependencies of the underlying data. In terms of the bias-variance trade-off however, it suffers from high variance due to the accumulation of error in the individual forecasts. This means we will get a low performance over longer time horizons $$H$$.
 
@@ -137,7 +137,7 @@ def direct_forecast(model, x, window, H):
 
 We can again visualize the distribution this strategy approximates in a graphical model:
 
-![]({{ BASE_PATH }}/images/2016_06_30/ts-direct-prediction.jpg)
+![]({{ BASE_PATH }}/images/2016_06_30/ts-direct-prediction.png)
 
 Here we see that this approach does not suffer from the accumulation of error, since each model $$f_h$$ is tailored to predict horizon $$h$$. However, since the models are trained independently no statistical dependencies between the predicted values $$y_{t + h}$$ are guaranteed.
 
@@ -194,150 +194,9 @@ However, when it comes to forecasting there is no silver bullet and what works b
 
 If your ultimate goal is more explanatory in nature rather than predictive, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
 
-I have put up the code used in this post in an IPython notebook [here](), and I also go through a basic forecasting problem to illustrate how to use these methods. This should give you all you need to try and apply your favorite machine learning algorithm to your forecasting problem.
+I have put up the code used in this post in an IPython notebook [here]({{ BASE_PATH }}/ipython-notebooks/2016_06_30/time-series-forecasting.ipynb), and I also go through a basic forecasting problem to illustrate how to use these methods. This should give you all you need to try and apply your favorite machine learning algorithm to your forecasting problem.
 
 ## References
 
 [^1]: Sorjamaa, Antti, and Amaury Lendasse. "Time series prediction using DirRec strategy." ESANN. Vol. 6. 2006., http://research.ics.aalto.fi/eiml/Publications/Publication64.pdf
 [^2]: Taieb, Souhaib Ben, et al. "A review and comparison of strategies for multi-step ahead time series forecasting based on the NN5 forecasting competition." Expert systems with applications 39.8 (2012): 7067-7083. http://souhaib-bentaieb.com/wp-content/uploads/2012/09/nn5paper.pdf
-
-
-
-### Using $$k$$-nearest neighbours to predict monthly car sales
-
-To illustrate the methods discussed above we'll go through a quick example where we use a $$k$$-nearest neighbour model as the learner. We'll use a data set of monthly car sales in Quebec starting from January 1960 to December 1968 which I obtained from [DataMarket](https://datamarket.com/data/set/22n4/monthly-car-sales-in-quebec-1960-1968#!ds=22n4&display=line).
-
-First we'll define some extra helper functions for splitting the time series up in  training and validation sets, as well as for some plotting.
-
-```python
-%matplotlib inline
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-from sklearn.neighbors.regression import KNeighborsRegressor
-from sklearn.cross_validation import PredefinedSplit
-from sklearn.grid_search import GridSearchCV
-
-def create_cv_split(X, perc=0.75):
-    n = X.shape[0]
-    n_train = np.floor(perc * n).astype(int)
-    split = np.ones(n)
-    split[:n_train] = -1
-
-    return PredefinedSplit(split)
-
-def plot_predictions(y_history, y_hat, y_true, plot_obs=False):
-    history_idx = range(y_history.shape[0])
-    pred_idx = range(y_history.shape[0], y_history.shape[0] + y_hat.shape[0])
-
-    plt.figure()
-    plt.plot(history_idx, y_history, hold=True, label="Observed")
-    plt.plot(pred_idx, y_hat, hold=True, label="Forecast")
-
-    if plot_obs:
-        plt.plot(pred_idx, y_true, hold = True, label = "Observed")
-
-    plt.title("Observed versus forecasted observations")
-    plt.legend(loc = "best")
-    plt.grid(True)
-    plt.show()
-```
-
-The time series looks like it has a relatively well behaved seasonal pattern and an upwards trend.
-
-```python
-ts = np.genfromtxt("monthly-car-sales-in-quebec-1960.csv", delimiter=",").reshape(-1)
-
-plt.plot(ts)
-```
-
-![]({{ BASE_PATH }}/images/2016_06_30/car-sales.png)
-
-```python
-# Multi-input multi-output model
-# Set up some global parameters and the model
-c = 80
-H = 20
-window = 20
-
-model = KNeighborsRegressor(algorithm="auto")
-param_grid = {"n_neighbors": [2 ** x for x in range(5)],
-                  "weights": ["uniform", "distance"],
-                  "metric": ["euclidean", "manhattan"]}
-
-X, y = time_series_to_mimo(x=ts[:c], window=window, h=H)
-
-cv_split = create_cv_split(X, perc=0.75)
-grid_search = GridSearchCV(estimator=model,
-                           param_grid=param_grid,
-                           scoring="mean_squared_error",
-                           cv=cv_split,
-                           refit=True)
-
-grid_search.fit(X, y)
-```
-
-```python
-# Now forecast the test period
-X_test = ts[(c - window):c].reshape(1, -1)
-y_test = ts[c:(c + H)]
-
-y_hat = grid_search.predict(X_test).reshape(-1)
-
-plot_predictions(ts[:c], y_hat, y_test, plot_obs=True)
-```
-
-![]({{ BASE_PATH }}/images/2016_06_30/forecast-mimo.png)
-
-## Iterative forecast
-
-```python
-c = 80
-H = 20
-window = 5
-
-model = KNeighborsRegressor(algorithm="auto")
-param_grid = {"n_neighbors": [2 ** x for x in range(5)],
-                  "weights": ["uniform", "distance"],
-                  "metric": ["euclidean", "manhattan"]}
-
-X, y = ts_to_training(x=ts[:c], window=window, h=1)
-
-cv_split = create_cv_split(X, perc=0.75)
-grid_search = GridSearchCV(estimator=model,
-                           param_grid=param_grid,
-                           scoring="mean_squared_error",
-                           cv=cv_split,
-                           verbose=True,
-                           refit=True)
-
-grid_search.fit(X, y)
-
-# Now forecast the test period
-X_test = ts[(c - window):c]
-y_test = ts[c:(c + H)]
-y_hat = iterative_forecast(grid_search, X_test, window, H)
-
-plot_predictions(ts[:c], y_hat, y_test, plot_obs=True)
-```
-
-![]({{ BASE_PATH }}/images/2016_06_30/forecast-iterated.png)
-
-## Direct strategy
-
-```python
-# We use the same model from the iterated strategy
-# Now forecast the test period
-X_test = ts[(c - window):c]
-y_test = ts[c:(c + H)]
-
-model_params = {'n_neighbors': 2, 'weights': 'distance', 'metric': 'manhattan'}
-model = KNeighborsRegressor(**model_params)
-y_hat = direct_forecast(model, ts, window, H)
-
-plot_predictions(ts[:c], y_hat, y_test, plot_obs=True)
-```
-
-![]({{ BASE_PATH }}/images/2016_06_30/forecast-direct.png)
