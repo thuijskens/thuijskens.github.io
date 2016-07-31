@@ -1,0 +1,172 @@
+%% start of file `template.tex'.
+%% Copyright 2006-2013 Xavier Danaux (xdanaux@gmail.com).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+
+
+\documentclass[10pt,a4paper,sans]{moderncv}        % possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
+
+% moderncv themes
+\moderncvstyle{classic}                             % style options are 'casual' (default), 'classic', 'oldstyle' and 'banking'
+\moderncvcolor{blue}                               % color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+%\renewcommand{\familydefault}{\sfdefault}         % to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
+%\nopagenumbers{}                                  % uncomment to suppress automatic page numbering for CVs longer than one page
+
+% character encoding
+%\usepackage[utf8]{inputenc}                       % if you are not using xelatex ou lualatex, replace by the encoding you are using
+%\usepackage{CJKutf8}                              % if you need to use CJK to typeset your resume in Chinese, Japanese or Korean
+
+% adjust the page margins
+\usepackage[scale=0.8]{geometry}
+\setlength{\hintscolumnwidth}{2.25cm}                % if you want to change the width of the column with the dates
+%\setlength{\makecvtitlenamewidth}{10cm}           % for the 'classic' style, if you want to force the width allocated to your name and avoid line breaks. be careful though, the length is normally calculated to avoid any overlap with your personal info; use this at your own typographical risks...
+
+% personal data
+\name{Thomas}{Huijskens}
+%\address{Essex Road 145}{N1 2ST London}{United Kingdom} % optional, remove / comment the line if not wanted; the "postcode city" and "country" arguments can be omitted or provided empty
+%\phone[mobile]{+44~7413633565}                   % optional, remove / comment the line if not wanted; the optional "type" of the phone can be "mobile" (default), "fixed" or "fax"
+\email{thomas\_huijskens@hotmail.com}                               % optional, remove / comment the line if not wanted
+%\homepage{www.johndoe.com}                         % optional, remove / comment the line if not wanted
+\social[linkedin]{thomashuijskens}                        % optional, remove / comment the line if not wanted
+%\social[twitter]{jdoe}                             % optional, remove / comment the line if not wanted
+\social[github]{thuijskens}                              % optional, remove / comment the line if not wanted
+%\extrainfo{June 30th, 1992, Houston, TX}                 % optional, remove / comment the line if not wanted
+%\photo[64pt][0.4pt]{picture}                       % optional, remove / comment the line if not wanted; '64pt' is the height the picture must be resized to, 0.4pt is the thickness of the frame around it (put it to 0pt for no frame) and 'picture' is the name of the picture file
+%\quote{Some quote}                                 % optional, remove / comment the line if not wanted
+
+% to show numerical labels in the bibliography (default is to show no labels); only useful if you make citations in your resume
+%\makeatletter
+%\renewcommand*{\bibliographyitemlabel}{\@biblabel{\arabic{enumiv}}}
+%\makeatother
+%\renewcommand*{\bibliographyitemlabel}{[\arabic{enumiv}]}% CONSIDER REPLACING THE ABOVE BY THIS
+
+% bibliography with mutiple entries
+%\usepackage{multibib}
+%\newcites{book,misc}{{Books},{Others}}
+%----------------------------------------------------------------------------------
+%            content
+%----------------------------------------------------------------------------------
+
+% Own commands
+\newcommand\mycventry[6]{%
+  \cventry{\fontsize{8}{7}\selectfont#1}{#2}{#3}{#4}{#5}{#6}}
+
+\newcommand\mycvitem[2]{%
+  \cvitem{\fontsize{8}{7}\selectfont#1}{#2}}
+
+\newcommand\cventrylarge[6]{%
+  \cventry{\fontsize{8}{7}\selectfont#1}{#2}{#3}{#4}{#5}{\fontsize{10}{9}\selectfont#6}}
+
+
+
+\usepackage{multicol}
+
+\begin{document}
+%\begin{CJK*}{UTF8}{gbsn}                          % to typeset your resume in Chinese using CJK
+%-----       resume       ---------------------------------------------------------
+\vspace*{-5mm}
+\makecvtitle
+\vspace*{-10mm}
+\section{Education}
+\mycventry{October 2014 - October 2015}{MSc in Applied Statistics}{University of Oxford}{}{}{Graduated with distinction.}  % arguments 3 to 6 can be left empty
+\mycvitem{Master thesis}{Based on a gigabyte-scale data set of taxi trajectories, I developed a machine learning pipeline that predicts the total travel time of a taxi trip, when the destination is unknown.}
+\mycvitem{Selected courses:}{\begin{itemize} 
+\item Machine learning (data compression, clustering, neural networks, random forests, support vector machines, model ensembles).
+\item Markov chain Monte Carlo methods (Gibbs sampling, Metropolis-Hastings sampling, reversible jump and sequential Monte Carlo methods).
+%\item Statistical theory, Bayesian regression models and state-space models.
+\end{itemize}}
+
+\mycventry{September 2010 - July 2013}{BSc in Applied Mathematics}{Delft University of Technology}{}{GPA: 8.4/10}{Graduated with distinction.}
+\mycvitem{Bachelor thesis}{I developed and implemented numerical methods that solve backward stochastic differential equations. I analysed the performance and complexity of the methods on a number of toy problems from mathematical finance.}
+%\mycvitem{Selected courses:}{\begin{itemize}
+%\item Real, complex and Fourier analysis.
+%\item Numerical methods for ordinary and partial differential equations.
+%\item Stochastic calculus and numerical methods for stochastic differential equations.
+%\end{itemize}}
+\medskip
+\mycventry{September 2012 - February 2013}{Semester abroad}{ETH Z\"{u}rich, Department of Mathematics}{}{GPA: 8.6/10}{As part of my BSc studies, I studied abroad at ETH Z\"urich. I completed a selection of courses that were part of the MSc in Statistics, and the MSc in Quantitative Finance at ETH Z\"{u}rich.}
+
+\section{Experience}
+
+\cventrylarge{November 2015 - Present}{Data scientist}{Tesco PLC}{London}{}{
+As a Data Scientist in the Clubcard Analytics team I build out data products and do product deep-dive research for the other teams within Clubcard, based on terabytes of customer data. I have been part of a number of projects, including but not limited to: \medskip
+\begin{itemize}
+\item Building a forecasting pipeline that estimates baseline sales figures for 500,000 different products as part of a bigger model for promotion profitability.
+\item Enabling better customer targeting for CRM email campaigns by building out customer targeting optimisation models. 
+%\item Productionising data product and ETL pipelines using Apache Spark. 
+\end{itemize}}
+
+\medskip
+
+\cventrylarge{September 2013 - September 2014}{Data analyst (part-time)}{MIcompany B.V.}{Amsterdam}{}{MIcompany is a commercial analytics consultancy that helps companies grow by specialised data analysis. I supported (senior) consultants with analyses based on complex data sets. My work involved data mining and analysis, visualising results and statistical modeling on gigabyte-scale data sets. My responsibilities included: \medskip
+\begin{itemize}
+\item Developing Bayesian regression models to identify the effect of insurance pricing on different customer segments and to show the potential result of a new pricing structure.
+\item Developing time series models for the sales data (480 million entries) of a large retail firm to extract business insights on turnover and customer behavior during a promotional period.
+\end{itemize}}
+
+\section{Skills and additional information}
+\mycvitem{Programming}{Scala, Apache Spark, Python (numpy, scikit-learn, pandas), R (ggplot2, dplyr, tidyr), Hive, Impala, Hadoop, Bash, Git.}
+\mycvitem{Citizenship}{Dutch and U.S. citizenship.}
+
+\section{Publications}
+\cvitem{}{T.P. Huijskens, M.J. Ruijter, C.W. Oosterlee, Efficient numerical Fourier methods for coupled forward-backward SDEs, Journal of Computational and Applied Mathematics 296 (2016): 593-612.}
+
+%\mycvitem{Big data technologies}{Experience with developing production ready data pipelines in Apache Spark, analysing data in Hive and Impala and data munging on the command line (Bash/Hadoop).}
+%\mycvitem{Languages}{Fluent in Dutch (native) and excellent in English (TOEFL score: 115/120)}
+%\mycvitem{Interests}{Field hockey, cooking, participating in Kaggle competitions.}
+%\mycvitem{Interests}{Field hockey, cooking, sailing and skiing.}
+
+%\section{Languages}
+%\cvitemwithcomment{Language 1}{Skill level}{Comment}
+%\cvitemwithcomment{Language 2}{Skill level}{Comment}
+%\cvitemwithcomment{Language 3}{Skill level}{Comment}
+
+%\section{Computer skills}
+%\cvdoubleitem{category 1}{XXX, YYY, ZZZ}{category 4}{XXX, YYY, ZZZ}
+%\cvdoubleitem{category 2}{XXX, YYY, ZZZ}{category 5}{XXX, YYY, ZZZ}
+%\cvdoubleitem{category 3}{XXX, YYY, ZZZ}{category 6}{XXX, YYY, ZZZ}
+
+%\section{Interests}
+%\cvitem{hobby 1}{Description}
+%\cvitem{hobby 2}{Description}
+%\cvitem{hobby 3}{Description}
+
+%\section{Extra 1}
+%\cvlistitem{Item 1}
+%\cvlistitem{Item 2}
+%\cvlistitem{Item 3. This item is particularly long and therefore normally spans over several lines. Did you notice the indentation when the line wraps?}
+
+%\section{Extra 2}
+%\cvlistdoubleitem{Item 1}{Item 4}
+%\cvlistdoubleitem{Item 2}{Item 5\cite{book1}}
+%\cvlistdoubleitem{Item 3}{Item 6. Like item 3 in the single column list before, this item is particularly long to wrap over several lines.}
+
+%\section{References}
+%\begin{cvcolumns}
+%  \cvcolumn{Category 1}{\begin{itemize}\item Person 1\item Person 2\item Person 3\end{itemize}}
+%  \cvcolumn{Category 2}{Amongst others:\begin{itemize}\item Person 1, and\item Person 2\end{itemize}(more upon request)}
+%  \cvcolumn[0.5]{All the rest \& some more}{\textit{That} person, and \textbf{those} also (all available upon request).}
+%\end{cvcolumns}
+
+% Publications from a BibTeX file without multibib
+%  for numerical labels: \renewcommand{\bibliographyitemlabel}{\@biblabel{\arabic{enumiv}}}% CONSIDER MERGING WITH PREAMBLE PART
+%  to redefine the heading string ("Publications"): \renewcommand{\refname}{Articles}
+%\nocite{*}
+%\bibliographystyle{plain}
+%\bibliography{publications}                        % 'publications' is the name of a BibTeX file
+
+% Publications from a BibTeX file using the multibib package
+%\section{Publications}
+%\nocitebook{book1,book2}
+%\bibliographystylebook{plain}
+%\bibliographybook{publications}                   % 'publications' is the name of a BibTeX file
+%\nocitemisc{misc1,misc2,misc3}
+%\bibliographystylemisc{plain}
+%\bibliographymisc{publications}                   % 'publications' is the name of a BibTeX file
+
+\end{document}
+
+
+%% end of file `template.tex'.
