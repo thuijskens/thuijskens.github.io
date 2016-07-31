@@ -1,30 +1,10 @@
 ---
 layout: page
-title: About
+title: About me
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+I am Thomas Huijskens, born in the US but brought up in The Netherlands. I am currently working as a Data Scientist in the Clubcard Analytics team at Tesco PLC and work and live in London. I'm using this site to occasionally share some of my personal insights and opinions about the world of data science.
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+I graduated with distinction from the University of Oxford with a masters degree in statistics. Before moving to the fields of statistics and data science I was mainly interested in stochastic calculus, numerical methods and financial mathematics. I have a BSc degree in Applied Mathematics with distinction from Delft University of Technology in which I focussed heavily on these subjects. I have also published a paper in these fields and if you are really interested in that you can read the pre-print [here](http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2622452) and find the final published version at the [Journal of Computational and Applied Mathematics](http://www.sciencedirect.com/science/article/pii/S0377042715005191) (paywall).
 
-There are currently two themes built on Poole:
-
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
-
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
+If you want to get in touch with me you can contact me by [email](mailto:thomas_huijskens@hotmail.com), or through my [LinkedIn](https://uk.linkedin.com/in/thomashuijskens) page. I'm always happy to connect with other people that share my interests.
