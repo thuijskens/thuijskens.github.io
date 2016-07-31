@@ -14,17 +14,30 @@ author:
 # Site settings
 title: Thomas Huijskens
 description: > # this means to ignore newlines until "baseurl:"
-  This is a placeholder description.
+
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://thuijskens.github.io" # the base hostname & protocol for your site
 github_username:  thuijskens
-paginate: 5
+paginate: 1
 
 # Build settings
 markdown: kramdown
 kramdown:
   math_engine: mathjax
   input: GFM
+
+# Google analytics
+analytics :
+  provider : google
+  google :
+      tracking_id : 'UA-81656073-1'
+  getclicky :
+    site_id :
+
+# SEO tags
+
+gems:
+  - jekyll-seo-tag
 
 # Custom vars
 version: 1.0.0
