@@ -3,16 +3,16 @@ layout: post
 title:  "Long-term forecasting with machine learning models"
 ---
 
-Time series analysis has been around for ages. Even though it sometimes does not receive as much attention as it deserves in the current data science and big data hype, it is one of those problems almost every data scientist will encounter at some point in their career. Time series problems can actually be quite hard to solve, as most of the time you deal with a relatively low-sample size which usually means an increase in the uncertainty of your parameter estimates or model predictions.
+Time series analysis has been around for ages. Even though it sometimes does not receive the attention it deserves in the current data science and big data hype, it is one of those problems almost every data scientist will encounter at some point in their career. Time series problems can actually be quite hard to solve, as you deal with a relatively small sample size most of the time. This usually means an increase in the uncertainty of your parameter estimates or model predictions.
 
-An extensive theory around on the different types of models you can use for calculating a forecast of your time series is already available in the literature. Seasonal [ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average) models and [state-space models](https://en.wikipedia.org/wiki/State-space_representation) are quite standard methods for these kind of problems. I recently had to provide some forecasts and in this blog post I'll discuss some of the different approaches I considered.
+A common problem in time series analysis is to make a forecast for the time series at hand. An extensive theory around on the different types of models you can use for calculating a forecast of your time series is already available in the literature. Seasonal [ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average) models and [state-space models](https://en.wikipedia.org/wiki/State-space_representation) are quite standard methods for these kinds of problems. I recently had to provide some forecasts and in this blog post I'll discuss some of the different approaches I considered.
 
-What was different from my previous encounters with time series analysis was that I now had to provide *longer term* forecasts (leaving in the middle what that means, long-term depends on the context) for a *large* number of time series (~500K). This prevented my from using some of the earlier mentioned classical methods, because
+The difference with my previous encounters with time series analyses was that now I had to provide *longer term* forecasts (which in itself is an ambiguous term, as it depends on the context) for a *large* number of time series (~500K). This prevented me from using some of the classical methods mentioned before, because
 
-1. ARIMA models are typically well-suited for short-term forecasts, but not for longer term forecasts due to the convergence of the autoregressive part of the model to the mean of the time series.
-2. The MCMC sampling algorithms for some of the Bayesian state-space models can be computationally heavy. Since I needed forecasts for a lot of time series quickly this ruled out these type of algorithms.
+1. classical ARIMA models are typically well-suited for short-term forecasts, but not for longer term forecasts due to the convergence of the autoregressive part of the model to the mean of the time series; and
+2. the MCMC sampling algorithms for some of the Bayesian state-space models can be computationally heavy. Since I needed forecasts for a lot of time series quickly this ruled out these type of algorithms.
 
-Instead I opted for a more algorithmic compared to a statistical point of view and decided to try out some machine learning methods. Since each individual time series still has a low sample size, the training time for simpler models would be quick enough for my use case. However, most of these methods are designed for independent and identically distributed (IID) data, so it is interesting to see how we can apply these models to non-IID (time series) data.
+Instead, I opted for a more algorithmic point of view, as opposed to a statistical one, and decided to try out some machine learning methods. However, most of these methods are designed for independent and identically distributed (IID) data, so it is interesting to see how we can apply these models to non-IID time series data.
 
 ### Forecasting strategies
 
@@ -20,19 +20,19 @@ Throughout this post we will make the following *non-linear autoregressive repre
 
 $$ y_t = f(y_{t - 1}, \ldots, y_{t - n})+ \epsilon_t, $$
 
-for some autoregressive order $$n$$ and where $$\epsilon_t$$ represents some noise at time $$t$$ and $$f$$ is an arbitrary and unknown function. The goal is to learn this function $$f$$ from the data and obtain forecasts for $$t + h$$, where $$h \in \{1, \ldots, H\}$$. Hence we are interested in predicting the next $$H$$ data points, not just the $$H$$-th data point, given the history of the time series.
+for some autoregressive order $$n$$ and where $$\epsilon_t$$ represents some noise at time $$t$$ and $$f$$ is an arbitrary and unknown function. The goal is to learn this function $$f$$ from the data and obtain forecasts for $$t + h$$, where $$h \in \{1, \ldots, H\}$$. Hence, we are interested in predicting the next $$H$$ data points, not just the $$H$$-th data point, given the history of the time series.
 
 When $$H = 1$$ (*one-step ahead forecasting*), it is straightforward to apply most machine learning methods on your data. In the case where we want to predict multiple time periods ahead ($$H > 1$$) things become a little more interesting.
 
 In this case there are three common ways of forecasting:
 
-* Iterated one-step ahead forecasting.
-* Direct $$H$$-step ahead forecasting.
+* Iterated one-step ahead forecasting;
+* Direct $$H$$-step ahead forecasting; and
 * Multiple input multiple output models.
 
 ### Iterated forecasting
 
-In iterated forecasting, we optimize a model based on a one-step ahead criterion and when calculating a $$H$$-step ahead forecast, we iteratively feed the forecasts of the model back in as input for the next prediction. In Python, a function that would compute the iterated forecast could look like this:
+In iterated forecasting, we optimize a model based on a one-step ahead criterion. When calculating a $$H$$-step ahead forecast, we iteratively feed the forecasts of the model back in as input for the next prediction. In Python, a function that computes the iterated forecast might look like this:
 
 
 ```python
@@ -72,25 +72,37 @@ def iterative_forecast(model, x, window, H):
     return forecast
 ```
 
-To understand the disadvantage of this method a bit better, it helps to go back to the original goal of our problem. What we are really trying to do is to approximate $$\mathbb{P}\left[ Y \,\vert\, X \right]$$ where $$Y \in \mathbb{R}^H$$ and $$X \in \mathbb{R}^n$$. We can visualize this distribution by using a graphical model. In the case $$n = 2$$ the distribution of the time series data can be represented as follows
+To understand the disadvantage of this method a bit better, it helps to go back to the original goal of our problem. What we are really trying to do is to approximate
+
+$$\mathbb{E}\left[ \textbf{y}_{(t+1):(t+H)} \,\vert\, \textbf{y}_{(t-n+1):t} \right],$$
+
+where
+
+$$\textbf{y}_{(t+1):(t+H)} = [y_{t + 1}, \ldots, y_{t + H}] \in \mathbb{R}^H,$$
+
+and
+
+$$\textbf{y}_{(t-n+1):t} = [y_{t - n + 1}, \ldots, y_t] \in \mathbb{R}^n,$$
+
+where $$n$$ is the order of the autoregressive model. We can visualize this distribution using a graphical model. In the case $$n = 2$$, the distribution of the time series data can be represented as follows
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_06_30/ts-graphical-model.png)
 
-Now, the distribution of our approximation is actually a bit different and looks more like this:
+We don't actually know the real values of $$y_{t + 1}, y_{t + 2}$$ and $$y_{t + 3}$$. Instead, we use our forecasts $$\hat{y}_{t + 1}, \hat{y}_{t + 2}$$ and $$\hat{y}_{t + 3}$$. As a result, the distribution of our approximation looks like this
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_06_30/ts-iterated-prediction.png)
 
-The iterated strategy returns an unbiased estimator of $$\mathbb{P}\left[Y \,\vert\, X\right]$$ since it preserves the stochastic dependencies of the underlying data. In terms of the bias-variance trade-off however, it suffers from high variance due to the accumulation of error in the individual forecasts. This means we will get a low performance over longer time horizons $$H$$.
+The iterated strategy returns an unbiased estimator of $$\mathbb{E}\left[ \textbf{y}_{(t+1):(t+H)} \,\vert\, \textbf{y}_{(t-n+1):t} \right]$$, since it preserves the stochastic dependencies of the underlying data. In terms of the bias-variance trade-off, however, this strategy suffers from high variance due to the accumulation of error in the individual forecasts. This means that we will get a low performance over longer time horizons $$H$$.
 
-### $$H$$-step ahead forecasting
+### Direct $$H$$-step ahead forecasting
 
 In direct $$H$$-step ahead forecasting, we learn $$H$$ different models of the form
 
-$$ y_{t + h} = f_h (y_t, \ldots, y_{t - n}) + \epsilon_{t + h}, $$
+$$ y_{t + h} = f_h (y_t, \ldots, y_{t - n + 1}) + \epsilon_{t + h}, $$
 
-where $$h \in \{1, \dots, H\}$$, $$n$$ is the number of past data points and $$f_h$$ is any arbitrary learner. Training the models $$f_h$$ in Python is relatively straightforward, you only need to use different (lagged) versions of your training data $$X$$ and response $$y$$.
+where $$h \in \{1, \dots, H\}$$, $$n$$ is the autoregressive order of the model, and $$f_h$$ is any arbitrary learner. Training the models $$f_h$$ in Python is relatively straightforward, as you only need to use different (lagged) versions of your training data and response.
 
 
 ```python
@@ -139,22 +151,22 @@ def direct_forecast(model, x, window, H):
     return forecast
 ```
 
-We can again visualize the distribution this strategy approximates in a graphical model:
+The distribution this strategy approximates can again be visualized in a graphical model:
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_06_30/ts-direct-prediction.png)
 
-Here we see that this approach does not suffer from the accumulation of error, since each model $$f_h$$ is tailored to predict horizon $$h$$. However, since the models are trained independently no statistical dependencies between the predicted values $$y_{t + h}$$ are guaranteed.
+Here, we see that this approach does not suffer from the accumulation of error, since each model $$f_h$$ is tailored to predict horizon $$h$$. However, since the models are trained independently, no statistical dependencies between the predicted values $$y_{t + h}$$ are guaranteed.
 
-An alternative strategy, called the DirRec strategy[^1], can be used to mitigate this assumption. The idea is to still train $$H$$ different models, but as we predict further into the future we use the forecasts of the earlier periods more and more. Even though this deals with the conditional independence assumption, the strategy is computationally heavy because we now need to train $$H$$ independent models.
+An alternative strategy, called the DirRec strategy[^1], can be used to mitigate this problem. The idea is to still train $$H$$ different models, but we use the forecasts of the earlier periods more and more as we predict further into the future. Even though this deals with the conditional independence assumption, the strategy is computationally heavy because we now need to train $$H$$ independent models.
 
-### Multiple input multiple output models
+### Multiple input multiple output models (MIMO)
 
 Finally, we can also train one model that takes multiple inputs and returns multiple outputs:
 
-$$ [y_{t + H}, \ldots, y_{t  +1}] = f(y_t, \ldots, y_{t - n}) + \mathbf{\epsilon}. $$
+$$ [y_{t + H}, \ldots, y_{t  +1}] = f(y_t, \ldots, y_{t - n + 1}) + \mathbf{\epsilon}. $$
 
-The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). This means that you only have to take care when you construct your feature and response data sets. In Python, this could look like this.
+The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). This means that you only have to take care when you construct your training and response data sets. In Python, this could look like this.
 
 
 ```python
@@ -183,23 +195,25 @@ def ts_to_mimo(x, window, h):
     return features, response
 ```
 
-The results of the above function can then be piped into any model that takes multi-dimensional input and output data. In long term prediction scenarios, the recursive and direct strategies neglect stochastic dependencies between future values. Using models that take multi-dimensional inputs and outputs therefore seems the most natural choice of models as the main advantages of the MIMO forecasting strategy are that
+The results of the above function can then be piped into any model that takes multi-dimensional input and output data. In long term prediction scenarios, both the iterated (because of the accumulation of errors in the forecasts) and direct strategies neglect stochastic dependencies between future values. The main advantages of the MIMO forecasting strategy are that
 
-1. Only one model is trained instead of $$H$$ different models.
-2. No conditional independence assumptions are made (c.f. direct strategy).
-3. There is no accumulation of error of individual forecasts (c.f. iterated strategy).
+1. only one model is trained instead of $$H$$ different models;
+2. no conditional independence assumptions are made (c.f. direct strategy); and
+3. there is no accumulation of error of individual forecasts (c.f. iterated strategy).
 
-One constraint of the MIMO strategy is that all horizons $$H$$ are to be forecasted with the same model, which limits the flexibility of our model. One approach to combat this assumption is to combine the direct and MIMO strategy, called the DIRMO strategy[^2]. The general idea is to split the forecasting horizon $$H$$ into $$n = \frac{H}{b}$$ blocks of length $$b$$ (where $$b \in \{1, \ldots, H\}$$). We then train $$n$$ different models, where each model is used to predict one of the blocks in a MIMO fashion.
+Using models that take multi-dimensional inputs and outputs therefore seems like the most natural choice of models for forecasting.
+
+One constraint of the MIMO strategy is that all horizons $$H$$ are to be forecasted with the same model, which limits our flexibility. One approach to combat this assumption is to combine the direct and MIMO strategy, and is called the DIRMO strategy[^2]. The general idea is to split the forecasting horizon $$H$$ into $$m = \frac{H}{b}$$ blocks of length $$b$$ (where $$b \in \{1, \ldots, H\}$$). We then train $$m$$ different models, where each model is used to predict one of the blocks in a MIMO fashion.
 
 ## Final words
 
-Out of the three strategies discussed here the MIMO strategy seems to be the most natural approach to applying machine learning methods to forecasting problems.
+Out of the three strategies discussed here the MIMO strategy seems to be the most natural approach to applying machine learning methods to long-term forecasting problems.
 
-However, when it comes to forecasting there is no silver bullet and what works best may be problem specific. One downside of using machine learning methods (or any non-parametric model for that matter) for forecasting problems is that we can't quantify the uncertainty in our predictions in terms of frequentist confidence or Bayesian credible intervals. This problem can perhaps be partly mitigated by using the [block bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#Block_bootstrap) to get bootstrapped confidence intervals.
+However, when it comes to forecasting there is no silver bullet and what works best may be problem specific. One downside of using machine learning methods for forecasting problems (or any non-parametric model for that matter) is that we can't quantify the uncertainty in our predictions in terms of frequentist confidence or Bayesian credible intervals. This problem can perhaps be partly mitigated by using the [block bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#Block_bootstrap) to get bootstrapped confidence intervals.
 
-If your ultimate goal is more explanatory in nature rather than predictive, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
+If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
 
-I have put up the code used in this post in an IPython notebook [here]({{ BASE_PATH }}/ipython-notebooks/2016_06_30/time-series-forecasting.ipynb), and I also go through a basic forecasting problem to illustrate how to use these methods. This should give you all you need to try and apply your favorite machine learning algorithm to your forecasting problem.
+The code used in this post can be found in an IPython notebook [here]({{ BASE_PATH }}/ipython-notebooks/2016_06_30/time-series-forecasting.ipynb), which also goes through a basic forecasting problem to illustrate how to use these methods. This should give you all you need to try and apply your favorite machine learning algorithm to your forecasting problem.
 
 ## References
 
