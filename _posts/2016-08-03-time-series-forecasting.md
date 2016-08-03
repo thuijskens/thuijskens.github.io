@@ -87,12 +87,12 @@ $$\textbf{y}_{(t-n+1):t} = [y_{t - n + 1}, \ldots, y_t] \in \mathbb{R}^n,$$
 where $$n$$ is the order of the autoregressive model. We can visualize this distribution using a graphical model. In the case $$n = 2$$, the distribution of the time series data can be represented as follows
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_06_30/ts-graphical-model.png)
+![]({{ BASE_PATH }}/images/2016_08_03/ts-graphical-model.png)
 
 We don't actually know the real values of $$y_{t + 1}, y_{t + 2}$$ and $$y_{t + 3}$$. Instead, we use our forecasts $$\hat{y}_{t + 1}, \hat{y}_{t + 2}$$ and $$\hat{y}_{t + 3}$$. As a result, the distribution of our approximation looks like this
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_06_30/ts-iterated-prediction.png)
+![]({{ BASE_PATH }}/images/2016_08_03/ts-iterated-prediction.png)
 
 The iterated strategy returns an unbiased estimator of $$\mathbb{E}\left[ \textbf{y}_{(t+1):(t+H)} \,\vert\, \textbf{y}_{(t-n+1):t} \right]$$, since it preserves the stochastic dependencies of the underlying data. In terms of the bias-variance trade-off, however, this strategy suffers from high variance due to the accumulation of error in the individual forecasts. This means that we will get a low performance over longer time horizons $$H$$.
 
@@ -154,7 +154,7 @@ def direct_forecast(model, x, window, H):
 The distribution this strategy approximates can again be visualized in a graphical model:
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_06_30/ts-direct-prediction.png)
+![]({{ BASE_PATH }}/images/2016_08_03/ts-direct-prediction.png)
 
 Here, we see that this approach does not suffer from the accumulation of error, since each model $$f_h$$ is tailored to predict horizon $$h$$. However, since the models are trained independently, no statistical dependencies between the predicted values $$y_{t + h}$$ are guaranteed.
 
@@ -210,7 +210,7 @@ Out of the three strategies discussed here the MIMO strategy seems to be the mos
 
 However, when it comes to forecasting there is no silver bullet and what works best may be problem specific. One downside of using machine learning methods for forecasting problems (or any non-parametric model for that matter) is that we can't quantify the uncertainty in our predictions in terms of frequentist confidence or Bayesian credible intervals. This problem can perhaps be partly mitigated by using the [block bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#Block_bootstrap) to get bootstrapped confidence intervals.
 
-If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models). 
+If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
 
 ## References
 
