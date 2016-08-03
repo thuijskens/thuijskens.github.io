@@ -166,7 +166,7 @@ Finally, we can also train one model that takes multiple inputs and returns mult
 
 $$ [y_{t + H}, \ldots, y_{t  +1}] = f(y_t, \ldots, y_{t - n + 1}) + \mathbf{\epsilon}. $$
 
-The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). You only need to transform the time series $$y_t$$ so you feed it into the learner $$f$$. In Python, this could look like this.
+The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). We only need to transform the time series $$y_t$$ such that you can feed it into the learner $$f$$. In Python, this could look like this.
 
 ```python
 def ts_to_mimo(x, window, h):
