@@ -160,14 +160,13 @@ Here, we see that this approach does not suffer from the accumulation of error, 
 
 An alternative strategy, called the DirRec strategy[^1], can be used to mitigate this problem. The idea is to still train $$H$$ different models, but we use the forecasts of the earlier periods more and more as we predict further into the future. Even though this deals with the conditional independence assumption, the strategy is computationally heavy because we now need to train $$H$$ independent models.
 
-### Multiple input multiple output models (MIMO)
+### Multiple input multiple output (MIMO) models
 
 Finally, we can also train one model that takes multiple inputs and returns multiple outputs:
 
 $$ [y_{t + H}, \ldots, y_{t  +1}] = f(y_t, \ldots, y_{t - n + 1}) + \mathbf{\epsilon}. $$
 
-The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). This means that you only have to take care when you construct your training and response data sets. In Python, this could look like this.
-
+The forecasts are provided in one step, and any learner $$f$$ that can deal with a multi-dimensional response can be used (yes, you can go crazy with your 12-layer neural network). You only need to transform the time series $$y_t$$ so you feed it into the learner $$f$$. In Python, this could look like this.
 
 ```python
 def ts_to_mimo(x, window, h):
@@ -211,9 +210,7 @@ Out of the three strategies discussed here the MIMO strategy seems to be the mos
 
 However, when it comes to forecasting there is no silver bullet and what works best may be problem specific. One downside of using machine learning methods for forecasting problems (or any non-parametric model for that matter) is that we can't quantify the uncertainty in our predictions in terms of frequentist confidence or Bayesian credible intervals. This problem can perhaps be partly mitigated by using the [block bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#Block_bootstrap) to get bootstrapped confidence intervals.
 
-If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
-
-The code used in this post can be found in an IPython notebook [here]({{ BASE_PATH }}/ipython-notebooks/2016_06_30/time-series-forecasting.ipynb), which also goes through a basic forecasting problem to illustrate how to use these methods. This should give you all you need to try and apply your favorite machine learning algorithm to your forecasting problem.
+If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models). 
 
 ## References
 
