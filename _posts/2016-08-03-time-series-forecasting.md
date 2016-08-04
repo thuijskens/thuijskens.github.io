@@ -26,9 +26,9 @@ When $$H = 1$$ (*one-step ahead forecasting*), it is straightforward to apply mo
 
 In this case there are three common ways of forecasting:
 
-* Iterated one-step ahead forecasting;
-* Direct $$H$$-step ahead forecasting; and
-* Multiple input multiple output models.
+* iterated one-step ahead forecasting;
+* direct $$H$$-step ahead forecasting; and
+* multiple input multiple output models.
 
 ### Iterated forecasting
 
