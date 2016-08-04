@@ -18,7 +18,7 @@ Instead, I opted for a more algorithmic point of view, as opposed to a statistic
 
 Throughout this post we will make the following *non-linear autoregressive representation* (NAR) assumption. Let $$y_t$$ denote the value of the time series at time point $$t$$, then we assume that
 
-$$ y_t = f(y_{t - 1}, \ldots, y_{t - n})+ \epsilon_t, $$
+$$ y_{t + 1} = f(y_t, \ldots, y_{t - n + 1})+ \epsilon_t, $$
 
 for some autoregressive order $$n$$ and where $$\epsilon_t$$ represents some noise at time $$t$$ and $$f$$ is an arbitrary and unknown function. The goal is to learn this function $$f$$ from the data and obtain forecasts for $$t + h$$, where $$h \in \{1, \ldots, H\}$$. Hence, we are interested in predicting the next $$H$$ data points, not just the $$H$$-th data point, given the history of the time series.
 
