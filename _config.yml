@@ -4,7 +4,7 @@
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink: pretty
-relative_permalinks: false
+relative_permalinks: true
 
 # About/contact
 author:
