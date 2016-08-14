@@ -3,7 +3,7 @@ layout: page
 title: About me
 ---
 
-I am Thomas Huijskens, born in the US but brought up in The Netherlands. I am currently working as a Data Scientist in the Clubcard Analytics team at Tesco PLC and work and live in London. I'm using this site to occasionally share some of my personal insights and opinions about the world of data science.
+I am Thomas Huijskens, born in the US but brought up in The Netherlands. I am currently working as a Data Scientist in the Clubcard Analytics team at Tesco PLC, and I work and live in London. I'm using this site to occasionally share some of my personal insights and opinions about the world of data science.
 
 I graduated with distinction from the University of Oxford with a masters degree in statistics. Before moving to the fields of statistics and data science, I was mainly interested in stochastic calculus, numerical methods and financial mathematics. I have a BSc degree in Applied Mathematics with distinction from Delft University of Technology, in which I focussed heavily on these subjects.
 
