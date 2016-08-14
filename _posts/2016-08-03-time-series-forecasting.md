@@ -14,6 +14,8 @@ The difference with my previous encounters with time series analyses was that no
 
 Instead, I opted for a more algorithmic point of view, as opposed to a statistical one, and decided to try out some machine learning methods. However, most of these methods are designed for independent and identically distributed (IID) data, so it is interesting to see how we can apply these models to non-IID time series data.
 
+<!--excerpt-->
+
 ### Forecasting strategies
 
 Throughout this post we will make the following *non-linear autoregressive representation* (NAR) assumption. Let $$y_t$$ denote the value of the time series at time point $$t$$, then we assume that
