@@ -1,15 +1,15 @@
 ---
 layout: post
-title: Causal analysis
+title: Causal analysis for observational studies in Python
 ---
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_08_14/correlation.png)
 
-*"Correlation does not imply causation"* is one of those principles every person that works with data should know. It is one of the first concepts taught in any intro to statistics class. There is a good reason for this, as most of the work of a data scientist or a statistician does actually revolves around questions of causation:
+*"Correlation does not imply causation"* is one of those principles every person that works with data should know. It is one of the first concepts taught in any introduction to statistics class. There is a good reason for this, as most of the work of a data scientist, or a statistician, does actually revolve around questions of causation:
 
 * Did customers buy into product X or service Y because of last weeks email campaign, or would they have converted regardless of whether we did or did not run the campaign?
-* Was there any effect of in-store promotion Z on the spending behavior of customers four weeks post the promotion?
+* Was there any effect of in-store promotion Z on the spending behavior of customers four weeks after the promotion?
 * Did people with disease X got better because they took treatment Y, or would they have gotten better anyways?
 
 Being able to distinguish between spurious correlations, and true causal effects, means a data scientist can truly add value to the company.
@@ -32,15 +32,15 @@ Usually, we are interested in either the *average treatment effect* (ATE)
 
 $$ ATE = \mathbb{E}\left[\delta\right] = \mathbb{E}\left[Y_1 - Y_0\right],$$
 
-which is the average (over the whole population) of the individual level causal effect $$\delta$$, or in the *average treatment effect on the treated* (ATT)
+which is the average (over the whole population) of the individual level causal effects $$\delta$$, or we are interested in the *average treatment effect on the treated* (ATT)
 
 $$ ATT = \mathbb{E}\left[\delta \,\vert\, T = 1\right] = \mathbb{E}\left[Y_1 - Y_0 \,\vert\, T = 1\right],$$
 
-which is the average of the individual level causal effect for the observations that got treated.
+which is the average of the individual level causal effects for the observations that got treated.
 
 In case of our promotion example, the ATE would the average difference in customer spend between customers that did and customers that did not participate in the promotion, and the ATT would be the average effect only for customers that participated.
 
-However, we will run into a problem when we try to directly compute these quantities. For a customer that participated in the promotion, we can never measure **both** the response in case they did participate, and the response in case they did not participate, simultaneously. We never observe both $$Y_1$$ and $$Y_0$$ for the same individual. The fact that we are missing either $$Y_1$$, or $$Y_0$$, for every observation is sometimes referred to as the *fundamental problem of causal analysis*.
+However, we will run into a problem when we try to directly compute these quantities. For a customer that participated in the promotion, we can never **simultaneously** measure the response in case they did participate, and the response in case they did not participate. We never observe both $$Y_1$$ and $$Y_0$$ for the same individual. The fact that we are missing either $$Y_1$$, or $$Y_0$$, for every observation is sometimes referred to as the *fundamental problem of causal analysis*.
 
 ### Randomized trials as the gold standard
 
@@ -72,7 +72,7 @@ This can be achieved by using a random sampling design, where you randomly assig
 
 ### Observational studies
 
-In reality, we mostly deal with data that does not come from a carefully set up randomized experiment. We deal with observational studies, where treatment assignment is typically not random, and influenced by external factors. In case of the promotion example, we have no influence in who does or does not participate in the promotion and participation is typically driven by external factors, like how much money people have to spend on their groceries shopping.
+In reality, we mostly deal with data that does not come from a carefully set up randomized experiment. We deal with observational studies, where treatment assignment is typically not random, and influenced by external factors. In case of the promotion example, we have no influence in who does or does not participate in the promotion and participation is typically driven by external factors, like how much money people can spend on their groceries shopping.
 
 How do we still come up with unbiased estimates of the ATE and ATT? One popular approach to this problem is to use matching methods.
 
@@ -107,25 +107,27 @@ In the second step of the above procedure, we need to find a matching observatio
 2. *radius matching*, where we take all the control observations that fall within a pre-defined radius $$R$$ of the treatment observation;
 3. *stratification matching*, where we pool all (both control and treatment) observations together in disjunct strata based on the propensity score. The treatment effect is then estimated as a weighted average of the treatment effect in the different strata.
 
-In $$k$$-nearest neighbour matching and radius matching you also have the choice to discard a control observation from the set of potential candidates or not (this is referred to as matching without or with replacement). In general, matching with replacement is preferred because in matching without replacement the final matching becomes dependent on the way the data was initially sorted. Hence, your matching may be biased by this sorting.
+In $$k$$-nearest neighbour matching and radius matching you also have the choice to discard a control observation from the set of potential candidates, once you have matched the control to a test observation. This is referred to as matching with (when you keep the control) or without replacement (when you discard the control).
+
+In general, matching with replacement is preferred because in matching without replacement the final matching becomes dependent on the way the data was initially sorted. Hence, your matching may be biased by this sorting.
 
 ### Turning theory into practice
 
-Now that we have processed the necessary theory, it is finally time to get our hands dirty and see how these methods work in practice! I have put up an [IPython notebook]({{ BASE_PATH }}/files/2016_08_14/causal-analysis-psm.ipynb) that works through a well known academic data-set, called the LaLonde[^2] data set.
+Now that we have processed the necessary theory, it is finally time to get our hands dirty and see how these methods work in practice! I have put up an [IPython notebook](https://github.com/thuijskens/thuijskens.github.io/blob/master/files/2016_08_14/causal-analysis-psm.ipynb) that works through a well known academic data-set, called the LaLonde[^2] data set.
 
-Here, we look at the effect of a job training program (the treatment) on real earnings a number of years after the program (the response). The original data set is unbalanced in the pre-treatment covariates, and hence any direct analysis of the treatment effect will not be accurate. The notebook shows how you can build a propensity score matching method in Python and gives some practical advice on post-matching validation checks.
+Here, we look at the effect of a job training program (the treatment) on real earnings a number of years after the program (the response). The original data set is unbalanced in the pre-treatment covariates, and hence any direct analysis of the treatment effect will not be accurate. The notebook shows how you can build a propensity score matching method in Python, and gives some practical advice on post-matching validation checks.
 
 If you prefer to work in R, you should definitely check out the excellent [MatchIt](http://gking.harvard.edu/matchit)[^3] package. To my knowledge, there is no robust package for (propensity score) matching methods in Python available yet.
 
 ### Final words and further reading
 
-Propensity score matching methods can be a good solution when we are analyzing data from an observational study, but these methods by no means guarantee proper balancing in the processed sample. We always have to check how well the sample is balanced after the matching, and usually we should iterate and vary the propensity model formulation, and the matching method, until we are happy with the resulting balance. Even then, there may still be selection bias present in your data.
+Propensity score matching methods can be a good solution when we are analyzing data from an observational study, but these methods by no means guarantee proper balancing in the processed sample. We always have to check how well the sample is balanced after the matching, and usually we should iterate, by varying the propensity model formulation and the matching method, until we are happy with the resulting balance. Even then, there may still be selection bias present in your data.
 
 What can you do in this case? There exists another class of matching methods, called **monotonic imbalance bounding** (MIB) methods. MIB methods allow you to choose a maximum imbalance, or they will reduce the imbalance in one covariate without changing the imbalance in others. An example of a MIB method is the so-called *coarsened exact matching*[^4] (CEM) algorithm, on which I may dedicate a future blog post. CEM is supported in the MatchIt R package, but there is no open source Python implementation available.
 
 Another common approach in analyzing observational studies is to apply a [Heckman correction](https://en.wikipedia.org/wiki/Heckman_correction)[^5] to your data. This is a two step procedure, where the first step again estimates a propensity model, and the second step consists of including a transformation of the propensity scores into a regression model that estimates the treatment effect.
 
-In the end these are still approximate methods however, and you may still end up with a data set you can't properly analyze. If you have the choice, you should always prefer proper experimental design above post-experiment data processing techniques.
+In the end these are still approximate methods however, and you may still end up with a data set you can't properly analyze. Even if you have perfect balance in the pre-treatment covariates you measured, you may still have a flawed design because of a confounding variable, of which you did not know it existed. If you have the choice, you should always prefer proper experimental design above post-experiment data processing techniques.
 
 ### References
 
