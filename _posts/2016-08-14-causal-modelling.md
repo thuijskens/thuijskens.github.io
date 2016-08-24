@@ -4,7 +4,7 @@ title: Causal analysis for observational studies in Python
 ---
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_08_14/correlation.png)
+![]({{ BASE_PATH }}/images/2016_08_25/correlation.png)
 
 *"Correlation does not imply causation"* is one of those principles every person that works with data should know. It is one of the first concepts taught in any introduction to statistics class. There is a good reason for this, as most of the work of a data scientist, or a statistician, does actually revolve around questions of causation:
 
@@ -24,7 +24,9 @@ In this post we will have a look at some of the frequently used methods in causa
 
 Before we delve deeper into some of the theory, let's define some standard terminology. We will consider a binary treatment variable $$T \in \{0, 1\}$$, where $$T = 1$$ denotes that one received the treatment and $$T = 0$$ denotes otherwise. $$T$$ could be any phenomenon we want to measure the causal effect of. It could be a new drug for a disease, a new kind of supplement, a new website design, or a commercial TV or email campaign your company ran.
 
-We also define a variable $$Y_T$$, that denotes the *response* for each value of the treatment $$T$$. For example, in case $$T$$ was a promotion we ran in-store, $$Y_1$$ would be the response (which could be something like average order value of a customer) if a customer participated in the promotion, and $$Y_0$$ would be the response if a customer did not buy into the promotion. I am suppressing any subscripts $$i$$ to identify individual observations for convenience here. Finally, we introduce another variable $$Y$$, that denotes the actual *observed* value of the response.
+We also define a variable $$Y_T$$, that denotes the *response* for each value of the treatment $$T$$. For example, in case $$T$$ was a promotion we ran in-store, $$Y_1$$ would be the response (which could be something like total spend in the weeks after the promtion) if a customer bought a product that was part of the promotion, and $$Y_0$$ would be the response if a customer did not buy into the promotion. Finally, we introduce another variable $$Y$$, that denotes the actual *observed* value of the response.
+
+For convenience, I am suppressing any subscripts $$i$$ to identify individual observations in the above.
 
 ### The fundamental problem of causal analysis
 
@@ -36,37 +38,40 @@ which is the average (over the whole population) of the individual level causal 
 
 $$ ATT = \mathbb{E}\left[\delta \,\vert\, T = 1\right] = \mathbb{E}\left[Y_1 - Y_0 \,\vert\, T = 1\right],$$
 
-which is the average of the individual level causal effects for the observations that got treated.
+which is the average of the individual level causal effects for the observations that got treated, and is useful to explicitly measure the effect on those observations for which the treatment was intended.
 
-In case of our promotion example, the ATE would the average difference in customer spend between customers that did and customers that did not participate in the promotion, and the ATT would be the average effect only for customers that participated.
+In case of our promotion example, the ATE would the average difference in customer spend between customers that did and customers that did not participate in the promotion. The ATT would be the average effect only for customers that participated.
 
 However, we will run into a problem when we try to directly compute these quantities. For a customer that participated in the promotion, we can never **simultaneously** measure the response in case they did participate, and the response in case they did not participate. We never observe both $$Y_1$$ and $$Y_0$$ for the same individual. The fact that we are missing either $$Y_1$$, or $$Y_0$$, for every observation is sometimes referred to as the *fundamental problem of causal analysis*.
 
 ### Randomized trials as the gold standard
 
-How can we solve this problem? Let's focus on estimating the ATE for now. We would like to compute this effect directly, but in reality we only have the estimator
+How can we solve this problem? Let's focus on estimating the ATT for now. We would like to compute this effect directly, but in reality we only have the estimator
 
-$$\hat{ATE} = \mathbb{E}\left[Y_1 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 0\right].$$
+$$
+\begin{align}
+\hat{ATT} &= \mathbb{E}\left[Y_1 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 0\right] \\
+&= (\mathbb{E}\left[Y_1 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 1\right]) + (\mathbb{E}\left[Y_0 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 0\right]) \\
+&= ATT + bias.
+\end{align}
+$$
 
-The ATE measures *causation*, but the above estimator only measures *association*.
+In the second step we used a small trick where we effectively added zero to the equation, because $$\mathbb{E}\left[Y_0 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 1\right] = 0$$. The remaining bias is the difference between the treated and control observations in absence of treatment, and this bias is called *selection bias*.
+
+The ATT measures *causation*, but the above estimator only measures *association*.
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_08_14/cell_phones.png)
+![]({{ BASE_PATH }}/images/2016_08_25/cell_phones.png)
 
-In general, these two are not equal and this is where the phrase "correlation does not imply causation" comes from. It is also referred to as the *identification problem*: we can't easily separate causation from association.
+In general, these two are not equal, and this is where the phrase "correlation does not imply causation" comes from. It is also referred to as the *identification problem*: we can't easily separate causation from association.
 
-To tackle this problem, we will need to make some assumptions, as assumption-free causal analysis is impossible. One can show that under the assumptions
+To tackle this problem, we will need to make some assumptions, as assumption-free causal analysis is impossible. If we want the estimator $$\hat{ATT}$$ to be equal to the ATT, we need the selection bias to be zero. Under the assumption
 
-* $$\mathbb{E}\left[Y_1 \,\vert\, T = 1\right] = \mathbb{E}\left[Y_1 \,\vert\, T = 0\right] = \mathbb{E}\left[Y_1\right],$$ and;
-* $$\mathbb{E}\left[Y_0 \,\vert\, T = 1\right] = \mathbb{E}\left[Y_0 \,\vert\, T = 0\right] = \mathbb{E}\left[Y_0\right]$$,
+$$ \mathbb{E}\left[Y_0 \,\vert\, T = 1\right] = \mathbb{E}\left[Y_0 \,\vert\, T = 0\right], $$
 
-the estimator $$\hat{ATE}$$ is a [consistent](https://en.wikipedia.org/wiki/Consistent_estimator) and [unbiased](https://en.wikipedia.org/wiki/Bias_of_an_estimator) estimator of the ATE, because under these assumptions we get that
+we get that the selection bias disappears and that the estimator $$\hat{ATT}$$ is a [consistent](https://en.wikipedia.org/wiki/Consistent_estimator) and [unbiased](https://en.wikipedia.org/wiki/Bias_of_an_estimator) estimator of the ATT, which means that *association* actually equals *causation* in this case.
 
-$$ \mathbb{E}\left[Y_1 \,\vert\, T = 1\right] - \mathbb{E}\left[Y_0 \,\vert\, T = 0\right] = \mathbb{E}\left[Y_1\right] - \mathbb{E}\left[Y_0\right],$$
-
-which means that *association* actually equals *causation* in this case.
-
-In words, these two assumptions mean that, *on average*, people in the test group and people in the control group are similar to each other, with respect to the potential outcomes. It means that, for each group we should only compare people that are similar to each other (we should compare apples to apples).
+In words, this assumption means that the outcomes from observations in the treatment and control groups would not differ in the absence of treatment. *On average*, observations in the treatment group and observations in the control group are similar to each other, with respect to the potential outcomes.
 
 This can be achieved by using a random sampling design, where you randomly assign treatment to observations in your population, and this is why a randomized experiment is sometimes called the *gold standard* in experimental design.
 
@@ -113,7 +118,7 @@ In general, matching with replacement is preferred because in matching without r
 
 ### Turning theory into practice
 
-Now that we have processed the necessary theory, it is finally time to get our hands dirty and see how these methods work in practice! I have put up an [IPython notebook](https://github.com/thuijskens/thuijskens.github.io/blob/master/files/2016_08_14/causal-analysis-psm.ipynb) that works through a well known academic data-set, called the LaLonde[^2] data set.
+Now that we have processed the necessary theory, it is finally time to get our hands dirty and see how these methods work in practice! I have put up an [IPython notebook](https://github.com/thuijskens/thuijskens.github.io/blob/master/files/2016_08_25/causal-analysis-psm.ipynb) that works through a well known academic data-set, called the LaLonde[^2] data set.
 
 Here, we look at the effect of a job training program (the treatment) on real earnings a number of years after the program (the response). The original data set is unbalanced in the pre-treatment covariates, and hence any direct analysis of the treatment effect will not be accurate. The notebook shows how you can build a propensity score matching method in Python, and gives some practical advice on post-matching validation checks.
 
