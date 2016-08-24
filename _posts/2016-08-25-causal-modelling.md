@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Causal analysis for observational studies in Python
+title: Causal analysis for observational studies
 ---
 
 {: .center-image }
