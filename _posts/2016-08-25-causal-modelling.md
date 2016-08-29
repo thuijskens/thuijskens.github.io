@@ -24,7 +24,7 @@ In this post we will have a look at some of the frequently used methods in causa
 
 Before we delve deeper into some of the theory, let's define some standard terminology. We will consider a binary treatment variable $$T \in \{0, 1\}$$, where $$T = 1$$ denotes that one received the treatment and $$T = 0$$ denotes otherwise. $$T$$ could be any phenomenon we want to measure the causal effect of. It could be a new drug for a disease, a new kind of supplement, a new website design, or a commercial TV or email campaign your company ran.
 
-We also define a variable $$Y_T$$, that denotes the *response* for each value of the treatment $$T$$. For example, in case $$T$$ was a promotion we ran in-store, $$Y_1$$ would be the response (which could be something like total spend in the weeks after the promtion) if a customer bought a product that was part of the promotion, and $$Y_0$$ would be the response if a customer did not buy into the promotion. Finally, we introduce another variable $$Y$$, that denotes the actual *observed* value of the response.
+We also define a variable $$Y_T$$, that denotes the *response* for each value of the treatment $$T$$. For example, in case $$T$$ was a promotion we ran in-store, $$Y_1$$ would be the response (which could be something like total spend in the weeks after the promotion) if a customer bought a product that was part of the promotion, and $$Y_0$$ would be the response if a customer did not buy into the promotion. Finally, we introduce another variable $$Y$$, that denotes the actual *observed* value of the response.
 
 For convenience, I am suppressing any subscripts $$i$$ to identify individual observations in the above.
 
