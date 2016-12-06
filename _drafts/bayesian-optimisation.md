@@ -166,7 +166,7 @@ Because this is a relatively simple problem, we can actually compute the loss su
 
 For the underlying GP, we'll assume a [Matern](http://scikit-learn.org/stable/modules/gaussian_process.html#matern-kernel) kernel as the covariance function. Although we skim over the selection of the kernel here, in general the behaviour of the algorithm is dependent on the choice of the kernel. Using a Matern kernel, with the default parameters, means we implicitly assume the loss $$f$$ is at least once differentiable. [There are a number of kernels available](http://scikit-learn.org/stable/modules/gaussian_process.html#kernels-for-gaussian-processes) in scikit-learn, and each kernel implies a different assumption on the behaviour of the loss $$f$$.
 
-The animation below shows the sequence of points selected, if we run the Bayesian optimization algorithm in this setting.
+The animation below shows the sequence of points selected, if we run the Bayesian optimization algorithm in this setting. The star shows the value of $$C$$ and $$\gamma$$ that result in the largest value of cross-validated AUC.
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_12_06/bo_2d_new_data.gif)
@@ -181,7 +181,7 @@ However, to tune your original machine learning model with this algorithm, it tu
 
 1. **Choose an appropriate scale for your hyperparameters**: For parameters like a learning rate, or regularization term, it makes more sense to sample on the log-uniform domain, instead of the uniform domain.
 
-2. **Kernel of the GP**: Different kernels have a drastic effect on the performance of the search algorithm. It is good practice to try different kernels at first.
+2. **Kernel of the GP**: Different kernels have a drastic effect on the performance of the search algorithm. Each kernel implicitly assumes different properties on the loss $$f$$, in terms of differentiability and periodicity.
 
 3. **Uniqueness of sampled hyperparameters**: Sampled hyperparameters that are close to each other, reduce the condinitioning of the problem. A solution is to add jitter (noise) to the diagonal of the covariance matrix. This is equivalent to adding some noise through the `alpha` parameter of the `GaussianProcessRegressor` method.  Make sure that the order of magnitude of the noise is on the appropriate scale for your loss function.
 
@@ -189,7 +189,12 @@ However, to tune your original machine learning model with this algorithm, it tu
 
 Bayesian optimisation certainly seems like an interesting approach, but it does require a bit more work than random grid search. The algorithm discussed here is not the only one in its class. A great overview of different hyperparameter optimization algorithms is given in this paper[^2].
 
-If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^3], or [hyperopt](https://github.com/hyperopt/hyperopt)[^4]. These implementations can also deal with integer, and categorical, hyperparameters. By treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example).
+If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^3], or [hyperopt](https://github.com/hyperopt/hyperopt)[^4]. These implementations can also deal with integer, and categorical, hyperparameters.
+
+Fun fact: by treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example). This allows you to truly optimize ALL THE THINGS.
+
+{: .center-image }
+![]({{ BASE_PATH }}/images/2016_12_06/optimize-all.jpg)
 
 ## References
 
