@@ -5,9 +5,9 @@ title: "Bayesian optimization in scikit-learn"
 
 Choosing the right parameters for a machine learning model is almost more of an art than a science. [Kaggle](https://www.kaggle.com) competitors spend considerable time on tuning their model in the hopes of winning competitions, and proper model selection plays a huge part in that. It is remarkable then, that the industry standard algorithm for selecting hyperparameters, is something as simple as random search.
 
-The strength of random search lies in its simplicity. Given a learner $$\mathcal{M}$$, with parameters $$\theta$$ and a loss function $$f$$, random search tries to find $$\theta$$ such that $$f$$ is maximized, or minimized, by evaluating $$f$$ for randomly sampled values of $$\theta$$. This is an [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel) algorithm: to parallelize it, we simply start a grid search on each machine separately.
+The strength of random search lies in its simplicity. Given a learner $$\mathcal{M}$$, with parameters $$\mathbf{x}$$ and a loss function $$f$$, random search tries to find $$\mathbf{x}$$ such that $$f$$ is maximized, or minimized, by evaluating $$f$$ for randomly sampled values of $$\mathbf{x}$$. This is an [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel) algorithm: to parallelize it, we simply start a grid search on each machine separately.
 
-This algorithm works well enough, if we can get samples from $$f$$ cheaply. However, when you are training sophisticated models on large data sets, it can sometimes take on the order of hours, or maybe even days, to get a single sample from $$f$$. In those cases, can we do any better than random search? It seems that we should be able to use past samples of $$f$$, to determine for which values of $$\theta$$ we are going to sample $$f$$ next.
+This algorithm works well enough, if we can get samples from $$f$$ cheaply. However, when you are training sophisticated models on large data sets, it can sometimes take on the order of hours, or maybe even days, to get a single sample from $$f$$. In those cases, can we do any better than random search? It seems that we should be able to use past samples of $$f$$, to determine for which values of $$\mathbf{x}$$ we are going to sample $$f$$ next.
 
 ## Bayesian optimization
 
@@ -17,21 +17,21 @@ There is actually a whole field dedicated to this problem, and in this blog post
 
 Bayesian optimization falls in a class of optimization algorithms called *sequential model-based optimization (SMBO)* algorithms. These algorithms use previous observations to determine the next point to sample the loss for. The algorithm can roughly be outlined as follows.
 
-1. Compute the current expectation of what the loss $$f$$ looks like, using previously evaluated points $$\theta$$.
-2. Sample the loss $$f$$ at a new point $$\hat{\theta}$$ that maximizes some utility of the expectation of $$f$$.
+1. Compute the current expectation of what the loss $$f$$ looks like, using previously evaluated points $$\mathbf{x}_{1:n}$$.
+2. Sample the loss $$f$$ at a new point $$\mathbf{x}_{\text{new}}$$ that maximizes some utility of the expectation of $$f$$.
 3. Repeat until convergence.
 
 ## Gaussian processes
 
 To compute a current expectation of the loss $$f$$, we need to make some assumptions about what we think the behaviour of this function looks like. In Bayesian search, we assume that the loss function $$f$$ can be described by a probability model called a *Gaussian process (GP)*.
 
-A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution on a random variable is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$ and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
+A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$ and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
 
 For a set of data points $$\textbf{x}_{1:n}$$, we assume that the value of the loss function at the sample can be described by a Gaussian distribution
 
 $$ f(\textbf{x}_{1:n}) \sim \mathcal{N}(m(\textbf{x}_{1:n}), \textbf{K}), $$
 
-where the kernel matrix $$\textbf{K}$$ has entries given by:
+where the kernel matrix $$\textbf{K}$$ has entries given by
 
 $$ [K]_{ij} = k(\textbf{x}_{i}, \textbf{x}_j). $$
 
@@ -67,14 +67,14 @@ where $$\Phi(z)$$, and $$\phi(z)$$, are the cumulative distribution and probabil
 
 This closed form solution gives us some insight into what sort of values will result in a higher expected improvement. From the above, we can derive that;
 
-1. EI is high when the (posterior) expected value of the loss $$\mu(\textbf{x})$$ is higher than the current best value $$f(\hat{\textbf{x}})$$;
-2. or, EI is high when the uncertainty $$\sigma(\textbf{x})$$ around the point $$\textbf{x}$$ is high.
+1. EI is high when the (posterior) expected value of the loss $$\mu(\textbf{x})$$ is higher than the current best value $$f(\hat{\textbf{x}})$$; or
+2. EI is high when the uncertainty $$\sigma(\textbf{x})$$ around the point $$\textbf{x}$$ is high.
 
 Intuitively, this makes sense. If we maximize the expected improvement, we will either sample from points for which we expect a higher value of $$f$$, or points in a region of $$f$$ we haven't explored yet ($$\sigma(\textbf{x})$$ is high). Compared to random search, this certainly seems like a smarter strategy.
 
 ## Putting all the pieces together
 
-After all this hard work we are finally able to combine all the pieces together and formulate the Bayesian optimization algorithm:
+After all this hard work, we are finally able to combine all the pieces together, and formulate the Bayesian optimization algorithm:
 
 1. Given observed values $$f(\textbf{x})$$, update the posterior expectation of $$f$$ using the GP model.
 2. Find $$\textbf{x}_{\text{new}}$$ that maximises the EI:
@@ -130,7 +130,7 @@ A proper Python implementation of this algorithm can be found on my GitHub page 
 
 ## Parameter selection of a support vector machine
 
-To see how this algorithm behaves, we'll use it on a classification task. Luckily for us, scikit-learn provides helper functions like `make_classification()`, to build dummy data sets that can be used to test classifiers for us.
+To see how this algorithm behaves, we'll use it on a classification task. Luckily for us, scikit-learn provides helper functions like `make_classification()`, to build dummy data sets that can be used to test classifiers.
 
 ```python
 from sklearn.datasets import make_classification
@@ -141,7 +141,7 @@ data, target = make_classification(n_samples=2500,
                                    n_redundant=5)
 ```
 
-We'll try to optimize the penalization parameter $$C$$, and kernel parameter $$\gamma$$, of a support vector machine with RBF kernel. The loss function we will use is the cross-validated area under the curve (AUC), based on three folds.
+We'll optimize the penalization parameter $$C$$, and kernel parameter $$\gamma$$, of a support vector machine, with RBF kernel. The loss function we will use is the cross-validated area under the curve (AUC), based on three folds.
 
 ```python
 from sklearn.model_selection import cross_val_score
@@ -187,10 +187,13 @@ However, to tune your original machine learning model with this algorithm, it tu
 
 ## Wrapping up
 
-Bayesian optimisation certainly seems like an interesting approach, but it does require a bit more work than random grid search. If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^1], or [hyperopt](https://github.com/hyperopt/hyperopt)[^2]. These implementations can also deal with integer, and categorical, hyperparameters. By treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example).
+Bayesian optimisation certainly seems like an interesting approach, but it does require a bit more work than random grid search. The algorithm discussed here is not the only one in its class. A great overview of different hyperparameter optimization algorithms is given in this paper[^1].
+
+If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^2], or [hyperopt](https://github.com/hyperopt/hyperopt)[^3]. These implementations can also deal with integer, and categorical, hyperparameters. By treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example).
 
 ## References
 
-[^1]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
-[^2]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf
-[^3]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
+[^1]: J. Bergstra, R. Bardenet, Y. Bengio, *Algorithms for hyper-parameter optimization.*, Advances in Neural Information Processing Systems, 2011, https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf.
+[^2]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
+[^3]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf
+[^4]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
