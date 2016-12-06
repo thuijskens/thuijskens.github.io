@@ -3,7 +3,7 @@ layout: post
 title: "Bayesian optimization in scikit-learn"
 ---
 
-Choosing the right parameters for a machine learning model is almost more of an art than a science. [Kaggle](https://www.kaggle.com) competitors spend considerable time on tuning their model in the hopes of winning competitions, and proper model selection plays a huge part in that. It is remarkable then, that the industry standard algorithm for selecting hyperparameters, is something as simple as random search.
+Choosing the right parameters for a machine learning model is almost more of an art than a science. [Kaggle](https://www.kaggle.com) competitors spend considerable time on tuning their model in the hopes of winning competitions, and proper model selection plays a huge part in that. It is remarkable then, that the industry standard algorithm for selecting hyperparameters, is something as simple as [random search](https://en.wikipedia.org/wiki/Random_search).
 
 The strength of random search lies in its simplicity. Given a learner $$\mathcal{M}$$, with parameters $$\mathbf{x}$$ and a loss function $$f$$, random search tries to find $$\mathbf{x}$$ such that $$f$$ is maximized, or minimized, by evaluating $$f$$ for randomly sampled values of $$\mathbf{x}$$. This is an [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel) algorithm: to parallelize it, we simply start a grid search on each machine separately.
 
@@ -15,7 +15,7 @@ There is actually a whole field dedicated to this problem, and in this blog post
 
 <!--excerpt-->
 
-Bayesian optimization falls in a class of optimization algorithms called *sequential model-based optimization (SMBO)* algorithms. These algorithms use previous observations to determine the next point to sample the loss for. The algorithm can roughly be outlined as follows.
+Bayesian optimization[^1] falls in a class of optimization algorithms called *sequential model-based optimization (SMBO)* algorithms. These algorithms use previous observations to determine the next point to sample the loss for. The algorithm can roughly be outlined as follows.
 
 1. Compute the current expectation of what the loss $$f$$ looks like, using previously evaluated points $$\mathbf{x}_{1:n}$$.
 2. Sample the loss $$f$$ at a new point $$\mathbf{x}_{\text{new}}$$ that maximizes some utility of the expectation of $$f$$.
@@ -187,13 +187,13 @@ However, to tune your original machine learning model with this algorithm, it tu
 
 ## Wrapping up
 
-Bayesian optimisation certainly seems like an interesting approach, but it does require a bit more work than random grid search. The algorithm discussed here is not the only one in its class. A great overview of different hyperparameter optimization algorithms is given in this paper[^1].
+Bayesian optimisation certainly seems like an interesting approach, but it does require a bit more work than random grid search. The algorithm discussed here is not the only one in its class. A great overview of different hyperparameter optimization algorithms is given in this paper[^2].
 
-If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^2], or [hyperopt](https://github.com/hyperopt/hyperopt)[^3]. These implementations can also deal with integer, and categorical, hyperparameters. By treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example).
+If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^3], or [hyperopt](https://github.com/hyperopt/hyperopt)[^4]. These implementations can also deal with integer, and categorical, hyperparameters. By treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example).
 
 ## References
 
-[^1]: J. Bergstra, R. Bardenet, Y. Bengio, *Algorithms for hyper-parameter optimization.*, Advances in Neural Information Processing Systems, 2011, https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf.
-[^2]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
-[^3]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf
-[^4]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
+[^1]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
+[^2]: J. Bergstra, R. Bardenet, Y. Bengio, *Algorithms for hyper-parameter optimization.*, Advances in Neural Information Processing Systems, 2011, https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf.
+[^3]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
+[^4]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf
