@@ -15,17 +15,22 @@ There is actually a whole field dedicated to this problem, and in this blog post
 
 <!--excerpt-->
 
-Bayesian optimization[^1] falls in a class of optimization algorithms called *sequential model-based optimization (SMBO)* algorithms. These algorithms use previous observations to determine the next point to sample the loss for. The algorithm can roughly be outlined as follows.
+Bayesian optimization[^1] falls in a class of optimization algorithms called *sequential model-based optimization (SMBO)* algorithms. These algorithms use previous observations of the loss $$f$$, to determine the next (optimal) point to sample $$f$$ for. The algorithm can roughly be outlined as follows.
 
-1. Compute the current expectation of what the loss $$f$$ looks like, using previously evaluated points $$\mathbf{x}_{1:n}$$.
-2. Sample the loss $$f$$ at a new point $$\mathbf{x}_{\text{new}}$$ that maximizes some utility of the expectation of $$f$$.
-3. Repeat until convergence.
+1.  Using previously evaluated points $$\mathbf{x}_{1:n}$$, compute a posterior expectation of what the loss $$f$$ looks like.
+2. Sample the loss $$f$$ at a new point $$\mathbf{x}_{\text{new}}$$, that maximizes some utility of the expectation of $$f$$. The utility specifies which regions of the domain of $$f$$ are optimal to sample from.
 
-## Gaussian processes
+These steps are repeated until some convergence criterion is met.
 
-To compute a current expectation of the loss $$f$$, we need to make some assumptions about what we think the behaviour of this function looks like. In Bayesian search, we assume that the loss function $$f$$ can be described by a probability model called a *Gaussian process (GP)*.
+## Gaussian processes as a prior for functions
 
-A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$ and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
+To compute a posterior expectation, we need a likelihood model for the samples from $$f$$, and a prior probability model on $$f$$. In Bayesian search, we assume a normal likelihood with noise
+
+$$ y = f(\mathbf{x}) + \epsilon, \quad\quad \epsilon \sim \mathcal{N}(0, \sigma^2_\epsilon), $$
+
+in other words, we assume $$y | f \sim \mathcal{N}(f(\textbf{x}), \sigma^2_\epsilon)$$.  
+
+For the prior distriution, we assume that the loss function $$f$$ can be described by a *Gaussian process (GP)*. A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$ and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
 
 For a set of data points $$\textbf{x}_{1:n}$$, we assume that the value of the loss function at the sample can be described by a Gaussian distribution
 
@@ -37,7 +42,7 @@ $$ [K]_{ij} = k(\textbf{x}_{i}, \textbf{x}_j). $$
 
 We can think of a GP as a function that, instead of returning a scalar $$f(\textbf{x})$$, returns the mean and variance of a normal distribution over the possible values of $$f$$ at $$\textbf{x}$$.
 
-A GP is a popular probability model, because it induces a posterior distribution over the loss function that is analytically tractable. This allows us to update our beliefs of what the loss function looks like, after we have computed the loss for a new set of hyperparameters (step 1 of the algorithm).
+A GP is a popular probability model, because it induces a posterior distribution over the loss function that is analytically tractable. This allows us to update our beliefs of what $$f$$ looks like, after we have computed the loss for a new set of hyperparameters.
 
 ## Acquisition functions
 
@@ -70,7 +75,7 @@ This closed form solution gives us some insight into what sort of values will re
 1. EI is high when the (posterior) expected value of the loss $$\mu(\textbf{x})$$ is higher than the current best value $$f(\hat{\textbf{x}})$$; or
 2. EI is high when the uncertainty $$\sigma(\textbf{x})$$ around the point $$\textbf{x}$$ is high.
 
-Intuitively, this makes sense. If we maximize the expected improvement, we will either sample from points for which we expect a higher value of $$f$$, or points in a region of $$f$$ we haven't explored yet ($$\sigma(\textbf{x})$$ is high). Compared to random search, this certainly seems like a smarter strategy.
+Intuitively, this makes sense. If we maximize the expected improvement, we will either sample from points for which we expect a higher value of $$f$$, or points in a region of $$f$$ we haven't explored yet ($$\sigma(\textbf{x})$$ is high). In other words, it trades off exploitation versus exploration.
 
 ## Putting all the pieces together
 
@@ -130,7 +135,7 @@ A proper Python implementation of this algorithm can be found on my GitHub page 
 
 ## Parameter selection of a support vector machine
 
-To see how this algorithm behaves, we'll use it on a classification task. Luckily for us, scikit-learn provides helper functions like `make_classification()`, to build dummy data sets that can be used to test classifiers.
+To see how this algorithm behaves, we'll use it on a classification task. Luckily for us, scikit-learn provides helper functions, like `make_classification()`, to build dummy data sets that can be used to test classifiers.
 
 ```python
 from sklearn.datasets import make_classification
@@ -141,7 +146,7 @@ data, target = make_classification(n_samples=2500,
                                    n_redundant=5)
 ```
 
-We'll optimize the penalization parameter $$C$$, and kernel parameter $$\gamma$$, of a support vector machine, with RBF kernel. The loss function we will use is the cross-validated area under the curve (AUC), based on three folds.
+We'll optimize the penalization parameter $$C$$, and kernel parameter $$\gamma$$, of a support vector machine, with RBF kernel. The loss function we will use, is the cross-validated area under the curve (AUC), based on three folds.
 
 ```python
 from sklearn.model_selection import cross_val_score
@@ -191,10 +196,7 @@ Bayesian optimisation certainly seems like an interesting approach, but it does 
 
 If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^3], or [hyperopt](https://github.com/hyperopt/hyperopt)[^4]. These implementations can also deal with integer, and categorical, hyperparameters.
 
-Fun fact: by treating the type of model you want to estimate as a categorical variable, you can even build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example). This allows you to truly optimize ALL THE THINGS.
-
-{: .center-image }
-![]({{ BASE_PATH }}/images/2016_12_06/optimize-all.jpg)
+An interesting application of these methods are fully automated machine learning pipelines. By treating the type of model you want to estimate as a categorical variable, you can build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example). It seems that this makes a large part of my job as a data scientist obsolete, but luckily we are not completely there yet.
 
 ## References
 
