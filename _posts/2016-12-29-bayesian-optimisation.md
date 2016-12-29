@@ -167,14 +167,14 @@ def sample_loss(params):
 Because this is a relatively simple problem, we can actually compute the loss surface as a function of $$C$$ and $$\gamma$$. This way, we can get an accurate estimate of where the true optimum of the loss surface is.
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_12_06/real_loss_contour.png)
+![]({{ BASE_PATH }}/images/2016_12_29/real_loss_contour.png)
 
 For the underlying GP, we'll assume a [Matern](http://scikit-learn.org/stable/modules/gaussian_process.html#matern-kernel) kernel as the covariance function. Although we skim over the selection of the kernel here, in general the behaviour of the algorithm is dependent on the choice of the kernel. Using a Matern kernel, with the default parameters, means we implicitly assume the loss $$f$$ is at least once differentiable. [There are a number of kernels available](http://scikit-learn.org/stable/modules/gaussian_process.html#kernels-for-gaussian-processes) in scikit-learn, and each kernel implies a different assumption on the behaviour of the loss $$f$$.
 
 The animation below shows the sequence of points selected, if we run the Bayesian optimization algorithm in this setting. The star shows the value of $$C$$ and $$\gamma$$ that result in the largest value of cross-validated AUC.
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2016_12_06/bo_2d_new_data.gif)
+![]({{ BASE_PATH }}/images/2016_12_29/bo_2d_new_data.gif)
 
 This is quite cool! Initially, the algorithm explores the parameter space a bit, but it quickly discovers a region where we have good performance, and it samples points in that region. This definitely is a smarter strategy than random search!
 
