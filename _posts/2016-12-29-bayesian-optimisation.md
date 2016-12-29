@@ -11,7 +11,7 @@ This algorithm works well enough, if we can get samples from $$f$$ cheaply. Howe
 
 ## Bayesian optimization
 
-There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, but we'll keep it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](http://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
+There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, whilst keeping it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](http://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
 
 <!--excerpt-->
 
@@ -28,15 +28,15 @@ To compute a posterior expectation, we need a likelihood model for the samples f
 
 $$ y = f(\mathbf{x}) + \epsilon, \quad\quad \epsilon \sim \mathcal{N}(0, \sigma^2_\epsilon), $$
 
-in other words, we assume $$y | f \sim \mathcal{N}(f(\textbf{x}), \sigma^2_\epsilon)$$.  
+in other words, we assume $$y \vert f \sim \mathcal{N}(f(\textbf{x}), \sigma^2_\epsilon)$$.  
 
-For the prior distriution, we assume that the loss function $$f$$ can be described by a *Gaussian process (GP)*. A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$ and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
+For the prior distribution, we assume that the loss function $$f$$ can be described by a *Gaussian process (GP)*. A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$, and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
 
-For a set of data points $$\textbf{x}_{1:n}$$, we assume that the value of the loss function at the sample can be described by a Gaussian distribution
+For a set of data points $$\textbf{x}_{1:n}$$, we assume that the value of the loss function at each sample $$\mathbf{x}_i$$ can be described by a Gaussian distribution
 
-$$ f(\textbf{x}_{1:n}) \sim \mathcal{N}(m(\textbf{x}_{1:n}), \textbf{K}), $$
+$$ f(\textbf{x}_i) \sim \mathcal{N}(m(\textbf{x}_i), \textbf{K}),$$
 
-where the kernel matrix $$\textbf{K}$$ has entries given by
+where the $$n \times n$$ kernel matrix $$\textbf{K}$$ has entries given by
 
 $$ [K]_{ij} = k(\textbf{x}_{i}, \textbf{x}_j). $$
 
@@ -196,7 +196,7 @@ Bayesian optimisation certainly seems like an interesting approach, but it does 
 
 If you're interested in more production-ready systems, it is worthwhile to check out [MOE](https://github.com/Yelp/MOE), [Spearmint](https://github.com/HIPS/Spearmint)[^3], or [hyperopt](https://github.com/hyperopt/hyperopt)[^4]. These implementations can also deal with integer, and categorical, hyperparameters.
 
-An interesting application of these methods are fully automated machine learning pipelines. By treating the type of model you want to estimate as a categorical variable, you can build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example). It seems that this makes a large part of my job as a data scientist obsolete, but luckily we are not completely there yet.
+An interesting application of these methods are fully automated machine learning pipelines. By treating the type of model you want to estimate as a categorical variable, you can build an optimizer in the `hyperopt` framework, that will select both the right model type, and the right hyperparameters of that model (see section 2.2 [here](https://github.com/hyperopt/hyperopt/wiki/FMin), for an example). It seems that this makes a large part of my job as a data scientist obsolete, but luckily we are not completely there yet!
 
 ## References
 
