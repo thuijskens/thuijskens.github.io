@@ -122,7 +122,7 @@ Now that we have processed the necessary theory, it is finally time to get our h
 
 Here, we look at the effect of a job training program (the treatment) on real earnings a number of years after the program (the response). The original data set is unbalanced in the pre-treatment covariates, and hence any direct analysis of the treatment effect will not be accurate. The notebook shows how you can build a propensity score matching method in Python, and gives some practical advice on post-matching validation checks.
 
-If you prefer to work in R, you should definitely check out the excellent [MatchIt](http://gking.harvard.edu/matchit)[^3] package. To my knowledge, there is no robust package for (propensity score) matching methods in Python available yet.
+If you prefer to work in R, you should definitely check out the excellent [MatchIt](https://gking.harvard.edu/matchit)[^3] package. To my knowledge, there is no robust package for (propensity score) matching methods in Python available yet.
 
 ### Final words and further reading
 
@@ -136,8 +136,8 @@ In the end these are still approximate methods however, and you may still end up
 
 ### References
 
-[^1]: Brodersen, K. H., Gallusser, F., Koehler, J., Remy, N., & Scott, S. L. 2015. *Inferring causal impact using Bayesian structural time-series models. The Annals of Applied Statistics*, 9(1), 247-274. http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/41854.pdf
+[^1]: Brodersen, K. H., Gallusser, F., Koehler, J., Remy, N., & Scott, S. L. 2015. *Inferring causal impact using Bayesian structural time-series models. The Annals of Applied Statistics*, 9(1), 247-274. https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/41854.pdf
 [^2]: Dehejia, Rajeev and Sadek Wahba. 1999. *Causal Effects in Non-Experimental Studies: Re-Evaluating the Evaluation of Training Programs*, Journal of the American Statistical Association 94 (448): 1053-1062. https://www.nber.org/~rdehejia/papers/dehejia_wahba_jasa.pdf
 [^3]: Daniel E Ho, Kosuke Imai, Gary King, and Elizabeth A Stuart. 2011. *MatchIt: Nonparametric Preprocessing for Parametric Causal Inference*, Journal of Statistical Software, 8, 42. https://www.jstatsoft.org/article/view/v042i08/v42i08.pdf
 [^4]: King, G. 2008. *Matching for Causal Inference Without Balance Checking*, Applied Statistics, 10, 1. https://gking.harvard.edu/files/gking/files/political_analysis-2011-iacus-pan_mpr013.pdf
-[^5]: Heckman, J. 2013. *Sample selection bias as a specification error*. Applied Econometrics, 31(3), 129-137. http://faculty.smu.edu/millimet/classes/eco7321/papers/heckman02.pdf
+[^5]: Heckman, J. 2013. *Sample selection bias as a specification error*. Applied Econometrics, 31(3), 129-137. https://faculty.smu.edu/millimet/classes/eco7321/papers/heckman02.pdf

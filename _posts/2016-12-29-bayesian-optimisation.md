@@ -11,7 +11,7 @@ This algorithm works well enough, if we can get samples from $$f$$ cheaply. Howe
 
 ## Bayesian optimization
 
-There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, whilst keeping it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](http://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
+There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, whilst keeping it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](https://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
 
 <!--excerpt-->
 
@@ -206,4 +206,4 @@ An interesting application of these methods are fully automated machine learning
 [^1]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
 [^2]: J. Bergstra, R. Bardenet, Y. Bengio, *Algorithms for hyper-parameter optimization.*, Advances in Neural Information Processing Systems, 2011, https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf.
 [^3]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
-[^4]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf.
+[^4]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., https://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf.

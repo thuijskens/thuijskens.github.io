@@ -212,9 +212,9 @@ Out of the three strategies discussed here the MIMO strategy seems to be the mos
 
 However, when it comes to forecasting there is no silver bullet and what works best may be problem specific. One downside of using machine learning methods for forecasting problems (or any non-parametric model for that matter) is that we can't quantify the uncertainty in our predictions in terms of frequentist confidence or Bayesian credible intervals. This problem can perhaps be partly mitigated by using the [block bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#Block_bootstrap) to get bootstrapped confidence intervals.
 
-If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](http://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
+If your ultimate goal is more explanatory rather than predictive in nature, you may find that more classical models like state-space models will give you better bang for your buck. Bayesian dynamic linear models (DLMs) in particular work nicely here, because of their flexibility and ease of interpretation (check out [this](https://multithreaded.stitchfix.com/blog/2016/04/21/forget-arima/) post over at Stitch Fix for an excellent discussion of these models).
 
 ## References
 
-[^1]: Sorjamaa, Antti, and Amaury Lendasse. *"Time series prediction using DirRec strategy."*, ESANN. Vol. 6. 2006., http://research.ics.aalto.fi/eiml/Publications/Publication64.pdf
-[^2]: Taieb, Souhaib Ben, et al. *"A review and comparison of strategies for multi-step ahead time series forecasting based on the NN5 forecasting competition."*, Expert systems with applications 39.8 (2012): 7067-7083, http://souhaib-bentaieb.com/wp-content/uploads/2012/09/nn5paper.pdf
+[^1]: Sorjamaa, Antti, and Amaury Lendasse. *"Time series prediction using DirRec strategy."*, ESANN. Vol. 6. 2006., https://research.ics.aalto.fi/eiml/Publications/Publication64.pdf
+[^2]: Taieb, Souhaib Ben, et al. *"A review and comparison of strategies for multi-step ahead time series forecasting based on the NN5 forecasting competition."*, Expert systems with applications 39.8 (2012): 7067-7083, https://souhaib-bentaieb.com/wp-content/uploads/2012/09/nn5paper.pdf
