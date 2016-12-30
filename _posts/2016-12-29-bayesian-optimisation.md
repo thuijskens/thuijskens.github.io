@@ -174,7 +174,7 @@ Because this is a relatively simple problem, we can actually compute the loss su
 
 For the underlying GP, we'll assume a [Matern](http://scikit-learn.org/stable/modules/gaussian_process.html#matern-kernel) kernel as the covariance function. Although we skim over the selection of the kernel here, in general the behaviour of the algorithm is dependent on the choice of the kernel. Using a Matern kernel, with the default parameters, means we implicitly assume the loss $$f$$ is at least once differentiable. [There are a number of kernels available](http://scikit-learn.org/stable/modules/gaussian_process.html#kernels-for-gaussian-processes) in scikit-learn, and each kernel implies a different assumption on the behaviour of the loss $$f$$.
 
-The animation below shows the sequence of points selected, if we run the Bayesian optimization algorithm in this setting. The star shows the value of $$C$$ and $$\gamma$$ that result in the largest value of cross-validated AUC.
+The animation below shows the sequence of points selected, if we run the Bayesian optimization algorithm in this setting. We also warm-start the procedure with 5 random samples from $$f$$. The star shows the value of $$C$$ and $$\gamma$$ that result in the largest value of cross-validated AUC.
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2016_12_29/bo_2d_new_data.gif)
