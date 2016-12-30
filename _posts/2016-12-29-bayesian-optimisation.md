@@ -36,7 +36,7 @@ For a set of data points $$\textbf{x}_{1:n} = \{\mathbf{x}_1, \ldots, \mathbf{x}
 
 $$ f_{1:n} \sim \mathcal{N}(m(\mathbf{x}_{1:n}), \textbf{K}),$$
 
-where $$m(\mathbf{x}_{1:n}) = \left[m(\mathbf{x}_1), \ldots, m(\mathbf{x}_n) \right]^T) $$, and the $$n \times n$$ kernel matrix $$\textbf{K}$$ has entries given by
+where $$m(\mathbf{x}_{1:n}) = \left[m(\mathbf{x}_1), \ldots, m(\mathbf{x}_n) \right]^T$$, and the $$n \times n$$ kernel matrix $$\textbf{K}$$ has entries given by
 
 $$ [K]_{ij} = k(\textbf{x}_{i}, \textbf{x}_j). $$
 
@@ -156,6 +156,7 @@ def sample_loss(params):
   C = params[0]
   gamma = params[1]
 
+  # Sample C and gamma on the log-uniform scale
   model = SVC(C=10 ** C, gamma=10 ** gamma, random_state=12345)
 
   # Sample parameters on a log scale
