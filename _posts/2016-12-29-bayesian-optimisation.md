@@ -32,9 +32,9 @@ in other words, we assume $$y \vert f \sim \mathcal{N}(f(\textbf{x}), \sigma^2_\
 
 For the prior distribution, we assume that the loss function $$f$$ can be described by a *Gaussian process (GP)*. A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$, and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
 
-For a set of data points $$\textbf{x}_{1:n}$$, we assume that the value of the loss function at each sample $$\mathbf{x}_i$$ can be described by a Gaussian distribution
+For a set of data points $$\textbf{x}_{1:n} = \{x_1, \ldots, x_n\}$$, we assume that the values of the loss function $$f(x_{1:n}) = \{f(x_1), \ldots, f(x_n)\}$$ can be described by a multivariate Gaussian distribution
 
-$$ f(\textbf{x}_i) \sim \mathcal{N}(m(\textbf{x}_i), \textbf{K}),$$
+$$ f(\textbf{x}_{1:n}) \sim \mathcal{N}(m(\textbf{x}_i), \textbf{K}),$$
 
 where the $$n \times n$$ kernel matrix $$\textbf{K}$$ has entries given by
 
@@ -156,8 +156,10 @@ def sample_loss(params):
   C = params[0]
   gamma = params[1]
 
+  model = SVC(C=10 ** C, gamma=10 ** gamma, random_state=12345)
+
   # Sample parameters on a log scale
-  return cross_val_score(model=SVC(C=10 ** C, gamma=10 ** gamma, random_state=12345),
+  return cross_val_score(model=model,
                          X=data,
                          y=target,
                          scoring='roc_auc',
@@ -203,4 +205,4 @@ An interesting application of these methods are fully automated machine learning
 [^1]: E. Brochu,, V. M. Cora, and N. De Freitas. *A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning.*, arXiv preprint arXiv:1012.2599 (2010), https://arxiv.org/pdf/1012.2599.pdf.
 [^2]: J. Bergstra, R. Bardenet, Y. Bengio, *Algorithms for hyper-parameter optimization.*, Advances in Neural Information Processing Systems, 2011, https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf.
 [^3]: J. Snoek, H. Larochelle, and R. P. Adams. *Practical bayesian optimization of machine learning algorithms.*. Advances in neural information processing systems, 2012, https://arxiv.org/pdf/1206.2944.pdf.
-[^4]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf
+[^4]: J. Bergstra, D. Yamins, and D. D. Cox. *Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions for Vision Architectures.*, ICML (1) 28 (2013): 115-123., http://www.jmlr.org/proceedings/papers/v28/bergstra13.pdf.
