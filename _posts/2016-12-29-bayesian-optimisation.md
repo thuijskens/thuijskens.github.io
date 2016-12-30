@@ -32,9 +32,9 @@ in other words, we assume $$y \vert f \sim \mathcal{N}(f(\textbf{x}), \sigma^2_\
 
 For the prior distribution, we assume that the loss function $$f$$ can be described by a *Gaussian process (GP)*. A GP is the generalization of a Gaussian distribution to a distribution over *functions*, instead of random variables. Just as a Gaussian distribution is completely specified by its mean and variance, a GP is completely specified by its **mean function** $$m(\textbf{x})$$, and **covariance function** $$k(\textbf{x}, \textbf{x}')$$.
 
-For a set of data points $$\textbf{x}_{1:n} = \{x_1, \ldots, x_n\}$$, we assume that the values of the loss function $$f(x_{1:n}) = \{f(x_1), \ldots, f(x_n)\}$$ can be described by a multivariate Gaussian distribution
+For a set of data points $$\textbf{x}_{1:n} = \{x_1, \ldots, x_n\}$$, we assume that the values of the loss function $$f_{1:n} = \{f(x_1), \ldots, f(x_n)\}$$ can be described by a multivariate Gaussian distribution
 
-$$ f(\textbf{x}_{1:n}) \sim \mathcal{N}(m(\textbf{x}_i), \textbf{K}),$$
+$$ f_{1:n} \sim \mathcal{N}(m(\textbf{x}_i), \textbf{K}),$$
 
 where the $$n \times n$$ kernel matrix $$\textbf{K}$$ has entries given by
 
