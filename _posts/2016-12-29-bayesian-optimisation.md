@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Bayesian optimization in scikit-learn"
+title: "Bayesian optimization with scikit-learn"
 ---
 
 Choosing the right parameters for a machine learning model is almost more of an art than a science. [Kaggle](https://www.kaggle.com) competitors spend considerable time on tuning their model in the hopes of winning competitions, and proper model selection plays a huge part in that. It is remarkable then, that the industry standard algorithm for selecting hyperparameters, is something as simple as [random search](https://en.wikipedia.org/wiki/Random_search).
