@@ -11,7 +11,7 @@ This algorithm works well enough, if we can get samples from $$f$$ cheaply. Howe
 
 ## Bayesian optimization
 
-There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, whilst keeping it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](https://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
+There is actually a whole field dedicated to this problem, and in this blog post I'll discuss a Bayesian algorithm for this problem. I'll go through some of the fundamentals, whilst keeping it light on the maths, and try to build up some intuition around this framework. Finally, we'll apply this algorithm on a real classification problem using the popular Python machine learning toolkit [scikit-learn](http://scikit-learn.org/). If you're not interested in the theory behind the algorithm, you can skip straight to the code, and example, by clicking [here](#parameter-selection-of-a-support-vector-machine).
 
 <!--excerpt-->
 
@@ -90,7 +90,7 @@ This procedure is either repeated for a pre-specified number of iterations, or u
 
 When looking at the second step, you may notice that we still have to maximize another function, the acquisition function! The nice thing here, is that the acquisition function is a lot easier to optimize than the original loss $$f$$. In case of the EI acquisition, we can even compute the derivatives analytically, and use a gradient-based solver to maximise the function.
 
-Finally, we can get to some coding! Because scikit-learn has a [Gaussian process]() module, we can implement this algorithm on top of the scikit-learn package. In pseudocode, the Bayesian optimization algorithm looks as follows:
+Finally, we can get to some coding! Because scikit-learn has a [Gaussian process](http://scikit-learn.org/stable/modules/gaussian_process.html) module, we can implement this algorithm on top of the scikit-learn package. In pseudocode, the Bayesian optimization algorithm looks as follows:
 
 ```python
 import sklearn.gaussian_process as gp
