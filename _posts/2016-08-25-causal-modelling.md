@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Causal analysis for observational studies
+title: The fundamental problem of causal analysis
 ---
 
 {: .center-image }
@@ -16,7 +16,7 @@ Being able to distinguish between spurious correlations, and true causal effects
 
 This is where traditional statistics, like experimental design, comes into play. Although it is perhaps not commonly associated with the field of data science, more and more data scientists are using principles from experimental design. [Data scientists at Twitter](https://www.meetup.com/Data-Science-London/events/226696208/) use these principles to correct for hidden bias in their A/B tests, engineers from Google have developed a whole [R package](https://google.github.io/CausalImpact)[^1] around causal analysis, and at Tesco we use these principles to attribute changes in customer spending behavior to promotions customers participated in.
 
-In this post we will have a look at some of the frequently used methods in causal analysis. First, we will go through a little bit of theory, and talk about why we need causal analysis in the first place. I will then introduce you to propensity score matching methods, which are one way of dealing with observational data sets. We will wrap up with a discussion about other methods, and I have also put up an IPython notebook that walks you through an example data set.
+In this post we will have a look at some of the frequently used methods in causal analysis. First, we will go through a little bit of theory, and talk about why we need causal analysis in the first place (the fundamental problem of causal analysis). I will then introduce you to propensity score matching methods, which are one way of dealing with observational data sets. We will wrap up with a discussion about other methods, and I have also put up an IPython notebook that walks you through an example data set.
 
 <!--excerpt-->
 
