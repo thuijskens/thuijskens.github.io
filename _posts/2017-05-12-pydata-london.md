@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Pydata London 2017"
+title: "Pydata London 2017 and hyperopt"
 ---
 
 Last week I attended the PyData London conference, where I gave a talk about Bayesian optimization. The talk was based on [my previous post](https://thuijskens.github.io/2016/12/29/bayesian-optimisation/) on using scikit-learn to implement these kind of algorithms. The main points I wanted to get across in my talk were
@@ -15,6 +15,8 @@ It seems that there is interest in using these optimization methods, but that th
 ## Sequential model-based algorithms (SMBOs) using hyperopt
 
 In my talk, there was not a lot of time to dive into some of the more production-ready software packages for sequential model-based optimization algorithms. Lately, I spent some time working with the package [hyperopt](https://github.com/hyperopt/hyperopt)[^1], and its API is actually easy to use. It is also straightforward to make hyperopt work with scikit-learn estimators. By treating the model type as a hyperparameter, we can even build an optimization that not only optimizes the hyperparameters of a model, but also the type of model itself.
+
+<!--excerpt-->
 
 To see how this works, we can first generate an artificial data set
 
