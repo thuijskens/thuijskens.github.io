@@ -43,6 +43,11 @@ Like scikit-learn, hyperopt needs a search space to run its optimization algorit
 from hyperopt import hp
 from hyperopt.pyll import scope
 
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF, Matern
+
 scope.define(KNeighborsClassifier)
 scope.define(SVC)
 scope.define(GaussianProcessClassifier)
@@ -64,6 +69,8 @@ The above piece of code introduces multiple concepts from hyperopt:
 Besides a search space, the other thing you need to provide is the objective function.
 
 ```python
+from sklearn.metrics import accuracy_score
+
 def objective_function(estimator):
     estimator.fit(X_train, y_train)
     y_hat = estimator.predict(X_test)
@@ -71,10 +78,13 @@ def objective_function(estimator):
     return -1 * accuracy_score(y_test, y_hat)
 ```
 
-Note that, we could also have used the cross-validated accuracy score instead of the accuracy on a single hold-out set. Finally, hyperopt provides a function `fmin` that actually performs the optimization. To get the optimal set of parameters, you simply call it as follows
+Note that, we could also have used the cross-validated accuracy score instead of the accuracy on a single hold-out set here.
+
+Finally, hyperopt provides a function `fmin` that actually performs the optimization. To get the optimal set of parameters, you simply call it as follows
 
 ```python
-# Call fmin
+from hyperopt import fmin, tpe
+
 best = fmin(
     fn=objective_function,
     space=search_space,
@@ -86,7 +96,7 @@ print(best)
 #>>> {'svc_c': 1.975771317797188, 'svc_gamma': 2.3274421992598877, 'estimator': 2}
 ```
 
-In this case, hyperopt tells us that the optimal model is an SVM with RBF kernel. This model also shows a nice fit on the data set
+In this case, hyperopt tells us that the optimal model is an SVM with RBF kernel, which shows a nice fit on the data set
 
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2017_05_12/clf_data.png)
