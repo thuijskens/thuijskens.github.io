@@ -18,7 +18,7 @@ In my talk, there was not a lot of time to dive into some of the more production
 
 <!--excerpt-->
 
-To see how this works, we can first generate an artificial data set
+To understand the API of hyperopt, I'll show how you can use hyperopt to tune a machine learning model, on an artificial data set.
 
 ```python
 from sklearn.datasets import make_moons
@@ -35,9 +35,14 @@ plot_data(X_train, X_test, y_train, y_test)
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2017_05_12/raw_data.png)
 
-The goal is to estimate a classifier that can classify each sample into the correct group. We can use hyperopt to select the optimal model. For example, let's say we want to decide between a k-nearest neighbors classifier, a support vector machine, and a gaussian process classifier.
+The goal is to estimate a classifier that can classify each sample into the correct group. We can use hyperopt to select both the optimal model, as well as the optimal parameters of the model. We need to give hyperopt the following:
 
-Like scikit-learn, hyperopt needs a search space to run its optimization algorithm over. The search space can be implemented by using either a list, or a dictionary. In our case, we will use hyperopts `pchoice` function, to tell hyperopt that we want to choose between different types of models.
+1. A **search space** for the hyperparameters.
+2. An **objective function** we want to optimize.
+
+For the current use case, let's say we want to decide between a k-nearest neighbors classifier, a support vector machine, and a gaussian process classifier.
+
+The search space for hyperopt is similar to the search space in scikit-learn, and can be implemented by using either a list, or a dictionary. To build the search space, we will use hyperopts `pchoice` function, to tell hyperopt that we want to choose between different types of models.
 
 ```python
 from hyperopt import hp
@@ -48,11 +53,19 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF, Matern
 
+# We need to call scope.define on deterministic
+# functions that we use in the search space
+# definition
 scope.define(KNeighborsClassifier)
 scope.define(SVC)
 scope.define(GaussianProcessClassifier)
 
+# Sample the regularization parameter from a
+# log-uniform distribution
 C = hp.loguniform('svc_c', -4, 1)
+
+# hp.pchoice takes a list of tuples (p, m), where
+# p specifies the sampling probability of model m
 search_space = hp.pchoice('estimator', [
     (0.1, scope.KNeighborsClassifier(n_neighbors=1 + hp.randint('n_neighbors', 9))),
     (0.1, scope.SVC(kernel='linear', C=C)),
@@ -63,10 +76,11 @@ search_space = hp.pchoice('estimator', [
 
 The above piece of code introduces multiple concepts from hyperopt:
 
+* **Prior distribution specification**: hyperopt provides us with functions that we can use to describe the sampling distribution for the hyperparameters.
 * **Shared variables**: The regularization parameter `C` is used in both the linear SVM, as well as the SVM with radial-basis kernel function.
-* **Deterministic expressions in search spaces**: You can use more than the functions provided by hyperopt, like `hp.choice`, `hp.loguniform`, in the search space. Deterministic functions (like scikit-learn classifiers) need to be wrapped using `scope`.
+* **Deterministic expressions in search spaces**: In the search space definition, you can use more than the distribution functions provided by hyperopt (like `hp.choice`, `hp.loguniform`) Deterministic functions (like scikit-learn estimators) can also be used, but they need to be wrapped using `scope`.
 
-Besides a search space, the other thing you need to provide is the objective function.
+Besides a search space, the other thing we need to provide is the objective function. In this setting, the objective function represents some measure of performance of the machine learning model.
 
 ```python
 from sklearn.metrics import accuracy_score
@@ -80,7 +94,7 @@ def objective_function(estimator):
 
 Note that, we could also have used the cross-validated accuracy score instead of the accuracy on a single hold-out set here.
 
-Finally, hyperopt provides a function `fmin` that actually performs the optimization. To get the optimal set of parameters, you simply call it as follows
+Finally, hyperopt provides a function `fmin` that does the actual optimization. To get the optimal set of parameters, you simply call it as follows
 
 ```python
 from hyperopt import fmin, tpe
