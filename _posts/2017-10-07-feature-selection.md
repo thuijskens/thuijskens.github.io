@@ -81,14 +81,16 @@ The choice of $$\alpha$$ and $$\beta$$ also encode a varying belief in certain a
 * Algorithms that balance the relative magnitude of relevancy against redundancy, tend to perform well in terms of accuracy.
 * The inclusion of a class conditional term seems to matter less. However, for some problems the inclusion of the class conditional term is critical (MADELON data set)
 * **The best overall trade-off for accuracy/stability was found in the JMI and MRMR criteria**.
-* The above findings can be broking in extreme small-sample problems, where the poor estimation of the mutual information terms influences performance dramatically.
+* The above findings can be broken in extreme small-sample problems, where the poor estimation of the mutual information terms influences performance dramatically.
 
 ## What method should I use in practice?
 
-The above suggests that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection. However, no single method will always work out of the box on any new problem. So how can we decide on on what feature selection algorithm to use (filter versus embedded model, JMI versus MRMR criterion)? Some things to take into consideration in practice are:
+The above suggests that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection. However, no single method will always work out of the box on any new problem. So how can we decide on on what feature selection algorithm to use?
+
+Some things to take into consideration in practice are:
 
 * **Low sample size**: If you're dealing with a data set that has a low sample size (<1000s), be mindful that the computation of the mutual information may break down. There are different ways in which one can compute the mutual information, so make sure to check what approximation your implementation uses, and check the relevant papers to see what their performance is like in low sample size regimes.
-* **High dimensionality and sparse features**: In high dimensional, and sparse settings, random forest based feature selection algorithms may have trouble identifying the relevant features due to the random subspace component of the learning algorithm. In this case it is good to check stability of the algorithm on bootstrapped samples of the original data.
+* **High dimensionality and sparse relationship between features and target**: In high dimensional, and sparse settings, random forest based feature selection algorithms may have trouble identifying the relevant features due to the random subspace component of the learning algorithm. In this case it is good to check stability of the algorithm on bootstrapped samples of the original data.
 * **Low sample size and high dimensional space**: This is one of the hardest settings to work in. Typically, an algorithm called stability selection[^2] with a LASSO structure learner works well here. Stability selection is a very strict method however, and will only select variables that have a relatively strong relationship with the target variable.
 
 In general it is a smart idea to try multiple feature selection algorithms on your data set, and to assess both:
