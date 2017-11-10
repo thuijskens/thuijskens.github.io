@@ -87,17 +87,19 @@ The above suggests that the JMI, and MRMR, criteria should be the go-to mutual i
 
 * **Low sample size**: If you're dealing with a data set that has a low sample size (<1000s), be mindful that the computation of the mutual information may break down. There are different ways in which one can compute the mutual information, so make sure to check what approximation your implementation uses, and check the relevant papers to see what their performance is like in low sample size regimes.
 * **High dimensionality and sparse features**: In high dimensional, and sparse settings, random forest based feature selection algorithms may have trouble identifying the relevant features due to the random subspace component of the learning algorithm. In this case it is good to check stability of the algorithm on bootstrapped samples of the original data.
-* **Low sample size and high dimensional space**: This is one of the hardest settings to work in, typically stability selection with a LASSO structure learner works well here. Stability selection is a very strict method however, and will only select variables that have a relatively strong relationship with the target variable.
+* **Low sample size and high dimensional space**: This is one of the hardest settings to work in. Typically, an algorithm called stability selection[^2] with a LASSO structure learner works well here. Stability selection is a very strict method however, and will only select variables that have a relatively strong relationship with the target variable.
 
 In general it is a smart idea to try multiple feature selection algorithms on your data set, and to assess both:
 
 * The performance of your final learner on a separate hold-out set. Make sure to include to do the feature selection only on the training set.
-* The stability of your feature selection algorithm on (bootstrapped) subsamples of your original data set. Kunchecha's stability index[^2] or Yu et al's stability index[^3] can be used to assess the algorithms stability.
+* The stability of your feature selection algorithm on (bootstrapped) subsamples of your original data set. Kunchecha's stability index[^3] or Yu et al's stability index[^4] can be used to assess the algorithms stability.
 
 ## References
 
 [^1]: Brown, G., Pocock, A., Zhao, M. J., & Luján, M. (2012). Conditional likelihood maximisation: a unifying framework for information theoretic feature selection. Journal of machine learning research, 13(Jan), 27-66. http://www.jmlr.org/papers/volume13/brown12a/brown12a.pdf
 
-[^2]: Kuncheva, L. I. (2007, February). A stability index for feature selection. In Artificial intelligence and applications (pp. 421-427). http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.101.6458&rep=rep1&type=pdf
+[^2]: Meinshausen, N., & Bühlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473. https://stat.ethz.ch/~nicolai/stability.pdf
 
-[^3]: Yu, L., Ding, C., & Loscalzo, S. (2008, August). Stable feature selection via dense feature groups. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining (pp. 803-811). ACM. https://pdfs.semanticscholar.org/45e2/ee33164d6fac44178196e09733b7628814e2.pdf
+[^3]: Kuncheva, L. I. (2007, February). A stability index for feature selection. In Artificial intelligence and applications (pp. 421-427). http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.101.6458&rep=rep1&type=pdf
+
+[^4]: Yu, L., Ding, C., & Loscalzo, S. (2008, August). Stable feature selection via dense feature groups. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining (pp. 803-811). ACM. https://pdfs.semanticscholar.org/45e2/ee33164d6fac44178196e09733b7628814e2.pdf
