@@ -40,7 +40,7 @@ where $$k$$ is the number of features we want to select. This is an NP-hard opti
 
 The simplest approach to solve this optimisation problem, is by using a greedy forward step-wise selection algorithm. Here, features are selected incrementally, one feature at a time.
 
-Let $$S^{t - 1} = \{x_{f_1}, \ldots, x_{f_{t - 1}}\}$ be the set of selected features at time step $$t - 1$$. The greedy method selects the next feature $$f_t$$ such that
+Let $$S^{t - 1} = \{x_{f_1}, \ldots, x_{f_{t - 1}}\}$$ be the set of selected features at time step $$t - 1$$. The greedy method selects the next feature $$f_t$$ such that
 
 $$ f_t = \arg\max_{i \notin S^{t - 1}} I(X_{S^{t - 1} \cup i} ; y) $$
 
