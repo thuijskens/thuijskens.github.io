@@ -7,6 +7,8 @@ Although [model selection]() plays an important role in learning a signal from s
 
 Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can fall into easy traps. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selections helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
 
+<!--excerpt-->
+
 ## Filter models
 
 In the above setting, we typically have a high dimensional data matrix $$X \in \mathbb{R}^{n \times p}$$, a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$X_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
