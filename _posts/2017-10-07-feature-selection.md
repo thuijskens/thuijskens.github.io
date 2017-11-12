@@ -3,27 +3,27 @@ layout: post
 title: "Mutual information based feature selection"
 ---
 
-Although [model selection]() plays an important role in learning a signal from some input data, it is arguably even more important to give the algorithm the right input data. The first step for a data scientist, is to construct relevant features by doing appropriate feature engineering. The resulting data set, typically high-dimensional, can then be used as input for a statistical learner.
+Although [model selection](https://thuijskens.github.io/2016/12/29/bayesian-optimisation/) plays an important role in learning a signal from some input data, it is arguably even more important to give the algorithm the right input data. The first step for a data scientist, is to construct relevant features by doing appropriate feature engineering. The resulting data set, typically high-dimensional, can then be used as input for a statistical learner.
 
-Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can fall into easy traps. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selection helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
+Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can be fooled by all the weird correlations present in your data. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selection helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
 
-<!--excerpt-->
+## Filter methods
 
-## Filter models
-
-In the above setting, we typically have a high dimensional data matrix $$X \in \mathbb{R}^{n \times p}$$, a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$X_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
+In the above setting, we typically have a high dimensional data matrix $$X \in \mathbb{R}^{n \times p}$$, and a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$X_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
 
 In general, we can divide feature selection algorithms as belonging to one of three classes:
 
-1. **Wrapper models** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a random forest on the data $$(X, y)$$, and selecting relevant features based on the feature importances would be an example of a wrapper model.
-2. **Filter models** do not use a learning algorithm on the original data $$X$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
-3. **Embedded models** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
+1. **Wrapper methods** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a random forest on the data $$(X, y)$$, and selecting relevant features based on the feature importances would be an example of a wrapper model.
+2. **Filter methods** do not use a learning algorithm on the original data $$X$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
+3. **Embedded mmethodsodels** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
 
-In this blog post I will focus on filter models, and in particular I'll look at filter models that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to the problem.
+In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to the problem.
+
+<!--excerpt-->
 
 ## Joint mutual information
 
-Mutual information is a measure between to (possible multi-dimensional) random variables $$X$$ and $$Y$$, that quantifies the amount of information obtained about one random variable, through the other random variable. The mutual information is given by
+Mutual information is a measure between two (possible multi-dimensional) random variables $$X$$ and $$Y$$, that quantifies the amount of information obtained about one random variable, through the other random variable. The mutual information is given by
 
 $$ I(X; Y) = \int_X \int_Y p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy, $$
 
