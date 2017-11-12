@@ -15,7 +15,7 @@ In general, we can divide feature selection algorithms as belonging to one of th
 
 1. **Wrapper methods** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a random forest on the data $$(X, y)$$, and selecting relevant features based on the feature importances would be an example of a wrapper model.
 2. **Filter methods** do not use a learning algorithm on the original data $$X$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
-3. **Embedded mmethodsodels** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
+3. **Embedded methods** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
 
 In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to the problem.
 
