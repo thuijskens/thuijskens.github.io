@@ -44,15 +44,32 @@ Let $$S^{t - 1} = \{x_{f_1}, \ldots, x_{f_{t - 1}}\}$$ be the set of selected fe
 
 $$ f_t = \arg\max_{i \notin S^{t - 1}} I(X_{S^{t - 1} \cup i} ; y) $$
 
-Greedy feature selection thus selects the features that at each step results in the biggest increase in the joint mutual information. One can show, that solving the above problem is the same as solving
+Greedy feature selection thus selects the features that at each step results in the biggest increase in the joint mutual information. Computing the joint mutual information involves integrating over a high-dimensional space, which quickly becomes intractable computationally. To make this computation a bit easier, we make the following assumption on the data:
 
-$$ f_t = \arg\max_{i \notin S^{t - 1}} \underbrace{I(x_i; y)}_{\text{relevancy}} - \underbrace{\left[I(x_i; x_{S^{t - 1}}) - I(x_i; x_{S^{t - 1}} | y) \right]}_{\text{redundancy}},$$
+* **Assumption 1**: The selected features $$X_S$$ are independent and class-conditionally independent given the unselected feature $$X_k$$ under consideration.
 
-so that we can see that the optimising this criterions results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
+Under this assumption one can show, by decomposing the mutual information term, that solving the above problem is the same as solving
+
+$$ f_t = \arg\max_{i \notin S^{t - 1}} \underbrace{I(x_i; y)}_{\text{relevancy}} - \underbrace{\left[I(x_i; x_{S^{t - 1}}) - I(x_i; x_{S^{t - 1}} | y) \right]}_{\text{redundancy}}.$$
+
+Optimising this criterion results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
 
 ## Lower-dimensional approximation
 
-The quantities involving $$S^{t - 1}$$ are $$(t - 1)$$-dimensional integrals, so quickly become intractable computationally. To make the problem tractable, almost all approaches in the literature propose the following low-order approximations
+Even with the above simplification of the joint mutual information, the quantities involving $$S^{t - 1}$$ are still $$(t - 1)$$-dimensional integrals. By making some assumptions on the data, we can simplify the computation of the mutual information terms drastically.
+
+* **Assumption 2**: All features are pairwise class-conditionally independent, i.e.
+$$
+p(x_i x_j | y) = p(x_i | y)p(x_j | y)
+$$
+  This implies that $$\sum I(X_j; X_k | y)$$ will be zero.
+* **Assumption 3**: All features are pairwise independent, i.e.
+$$
+p(x_i x_j) = p(x_i) p(x_j)
+$$
+  This implies that $$\sum I(X_j; X_k)$$ will be zero.
+
+To make the problem tractable, almost all approaches in the literature use the above assumptions to propose the following low-order approximations
 
 $$
 \begin{align}
@@ -77,23 +94,23 @@ These parameters actually specify a family of mutual information-based criteria,
 * Maximum relevancy minimum redundancy (MRMR): $$\alpha = \frac{1}{t - 1}$$ and $$\beta = 0$$.
 * Mutual information maximisation (MIM): $$\alpha = 0$$ and $$\beta = 0$$.
 
-The choice of $$\alpha$$ and $$\beta$$ also encode a varying belief in certain assumptions on the data. Brown et al (2012)[^1] perform a number of experiments in which they compare the different algorithms against each other. They find that:
-* Algorithms that balance the relative magnitude of relevancy against redundancy, tend to perform well in terms of accuracy.
-* The inclusion of a class conditional term seems to matter less. However, for some problems the inclusion of the class conditional term is critical (MADELON data set)
-* **The best overall trade-off for accuracy/stability was found in the JMI and MRMR criteria**.
-* The above findings can be broken in extreme small-sample problems, where the poor estimation of the mutual information terms influences performance dramatically.
+Each of these criteria make different assumptions, and we can see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of the assumptions.
+
+* A value of $$\alpha$$ closer to zero indicates a stronger belief in Assumption 3.
+* A value of $$\beta$$ closer to zero indicates a stronger belief in Assumption 2.
+* All variable selection criteria make Assumption 1.
 
 ## What method should I use in practice?
 
-The above suggests that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection. However, no single method will always work out of the box on any new problem. So how can we decide on on what feature selection algorithm to use?
+Brown et al (2012)[^1] perform a number of experiments in which they compare the different algorithms against each other. They find that algorithms that balance the relative magnitude of relevancy against redundacy, tend to perform well in terms of stability and the accuracy of the final learning algorithm. They suggest that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection.
 
-Some things to take into consideration in practice are:
+However, no single method will always work out of the box on any new problem. So how can we decide on on what feature selection algorithm to use? Taking a step back, we should also think about how we can decide when to use a filter method, or an embedded method? Some things to take into consideration in practice are:
 
 * **Low sample size**: If you're dealing with a data set that has a low sample size (<1000s), be mindful that the computation of the mutual information may break down. There are different ways in which one can compute the mutual information, so make sure to check what approximation your implementation uses, and check the relevant papers to see what their performance is like in low sample size regimes.
 * **High dimensionality and sparse relationship between features and target**: In high dimensional, and sparse settings, random forest based feature selection algorithms may have trouble identifying the relevant features due to the random subspace component of the learning algorithm. In this case it is good to check stability of the algorithm on bootstrapped samples of the original data.
 * **Low sample size and high dimensional space**: This is one of the hardest settings to work in. Typically, an algorithm called stability selection[^2] with a LASSO structure learner works well here. Stability selection is a very strict method however, and will only select variables that have a relatively strong relationship with the target variable.
 
-In general it is a smart idea to try multiple feature selection algorithms on your data set, and to assess both:
+In general, it is a smart idea to try multiple feature selection algorithms on your data set, and to assess both:
 
 * The performance of your final learner on a separate hold-out set. Make sure to include to do the feature selection only on the training set.
 * The stability of your feature selection algorithm on (bootstrapped) subsamples of your original data set. Kunchecha's stability index[^3] or Yu et al's stability index[^4] can be used to assess the algorithms stability.
