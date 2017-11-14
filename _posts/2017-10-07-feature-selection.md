@@ -100,27 +100,30 @@ Each of these criteria make different assumptions, and we can see that $$\alpha$
 * A value of $$\beta$$ closer to zero indicates a stronger belief in Assumption 2.
 * All variable selection criteria make Assumption 1.
 
-## What method should I use in practice?
+Brown et al (2012)[^1] perform a number of experiments in which they compare the different algorithms against each other. They find that algorithms that balance the relative magnitude of relevancy against redundancy, tend to perform well in terms of stability and the accuracy of the final learning algorithm. They suggest that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection.
 
-Brown et al (2012)[^1] perform a number of experiments in which they compare the different algorithms against each other. They find that algorithms that balance the relative magnitude of relevancy against redundacy, tend to perform well in terms of stability and the accuracy of the final learning algorithm. They suggest that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection.
+In practice, your results will not only depend on the criterion used. Even though we have reduced the computation of the full joint mutual information to pairwise (conditional) mutual information terms, their computation is still non-trivial and forms an area of active research. An interesting recent contribution has been made by Gao et al (2017)[^2], where they propose an estimator that handles the case where $$X$$ and $$Y$$ can both be a mixture of a continuous and discrete distribution. More estimators of $$I(X; Y)$$ exist in the literature, and the accuracy of the approximation you use will influence the results of your feature selection algorithm.
 
-However, no single method will always work out of the box on any new problem. So how can we decide on on what feature selection algorithm to use? Taking a step back, we should also think about how we can decide when to use a filter method, or an embedded method? Some things to take into consideration in practice are:
+## Practical advice
+
+No single method will always work out of the box on any new problem. So how can we decide on the type of feature selection algorithm, a filter or embedded method, to use? Some things to take into consideration in practice are:
 
 * **Low sample size**: If you're dealing with a data set that has a low sample size (<1000s), be mindful that the computation of the mutual information may break down. There are different ways in which one can compute the mutual information, so make sure to check what approximation your implementation uses, and check the relevant papers to see what their performance is like in low sample size regimes.
+
 * **High dimensionality and sparse relationship between features and target**: In high dimensional, and sparse settings, random forest based feature selection algorithms may have trouble identifying the relevant features due to the random subspace component of the learning algorithm. In this case it is good to check stability of the algorithm on bootstrapped samples of the original data.
-* **Low sample size and high dimensional space**: This is one of the hardest settings to work in. Typically, an algorithm called stability selection[^2] with a LASSO structure learner works well here. Stability selection is a very strict method however, and will only select variables that have a relatively strong relationship with the target variable.
 
-In general, it is a smart idea to try multiple feature selection algorithms on your data set, and to assess both:
+* **Low sample size and high dimensional space**: This is one of the hardest settings to work in. Typically, an algorithm called stability selection[^3] with a LASSO structure learner works well here. Stability selection is a very conservative method however, and will only select variables that have a relatively strong relationship with the target variable.
 
-* The performance of your final learner on a separate hold-out set. Make sure to include to do the feature selection only on the training set.
-* The stability of your feature selection algorithm on (bootstrapped) subsamples of your original data set. Kunchecha's stability index[^3] or Yu et al's stability index[^4] can be used to assess the algorithms stability.
+Regardless of the above advice, if you have sufficient data it is always a smart idea to try multiple feature selection algorithms on your data set, and to compare the results. It is helpful to compare both the performance of your final learner on a separate hold-out set, where feature selection is done only on the training set, and the stability of the feature selection algorithms. The stability of your algorithm can for example be assessed by using Kunchecha's stability index[^4], or Yu et al's stability index[^5].
 
 ## References
 
 [^1]: Brown, G., Pocock, A., Zhao, M. J., & Luján, M. (2012). Conditional likelihood maximisation: a unifying framework for information theoretic feature selection. Journal of machine learning research, 13(Jan), 27-66. http://www.jmlr.org/papers/volume13/brown12a/brown12a.pdf
 
-[^2]: Meinshausen, N., & Bühlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473. https://stat.ethz.ch/~nicolai/stability.pdf
+[^2]: Gao, W., Kannan, S., Oh, S., & Viswanath, P. (2017). Estimating mutual information for discrete-continuous mixtures. arXiv preprint arXiv:1709.06212.. https://arxiv.org/pdf/1709.06212.pdf
 
-[^3]: Kuncheva, L. I. (2007, February). A stability index for feature selection. In Artificial intelligence and applications (pp. 421-427). http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.101.6458&rep=rep1&type=pdf
+[^3]: Meinshausen, N., & Bühlmann, P. (2010). Stability selection. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72(4), 417-473. https://stat.ethz.ch/~nicolai/stability.pdf
 
-[^4]: Yu, L., Ding, C., & Loscalzo, S. (2008, August). Stable feature selection via dense feature groups. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining (pp. 803-811). ACM. https://pdfs.semanticscholar.org/45e2/ee33164d6fac44178196e09733b7628814e2.pdf
+[^4]: Kuncheva, L. I. (2007, February). A stability index for feature selection. In Artificial intelligence and applications (pp. 421-427). http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.101.6458&rep=rep1&type=pdf
+
+[^5]: Yu, L., Ding, C., & Loscalzo, S. (2008, August). Stable feature selection via dense feature groups. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining (pp. 803-811). ACM. https://pdfs.semanticscholar.org/45e2/ee33164d6fac44178196e09733b7628814e2.pdf
