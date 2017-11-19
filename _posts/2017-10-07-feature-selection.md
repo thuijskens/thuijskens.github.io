@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Mutual information based feature selection"
+title: "Mutual information-based feature selection"
 ---
 
 Although [model selection](https://thuijskens.github.io/2016/12/29/bayesian-optimisation/) plays an important role in learning a signal from some input data, it is arguably even more important to give the algorithm the *right* input data. When building a model, the first step for a data scientist is typically to construct relevant features by doing appropriate feature engineering. The resulting data set, which is typically high-dimensional, can then be used as input for a statistical learner.
