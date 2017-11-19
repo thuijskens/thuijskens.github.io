@@ -56,7 +56,7 @@ Optimising this criterion results in trading off the *relevance* of a new featur
 
 ## Lower-dimensional approximation
 
-Even with the above simplification of the joint mutual information, the quantities involving $$S^{t - 1}$$ are still $$(t - 1)$$-dimensional integrals. By making some assumptions on the data, we can simplify the computation of the mutual information terms drastically.
+Even with the above simplification of the joint mutual information, the quantities involving $$S^{t - 1}$$ are still $$(t - 1)$$-dimensional integrals. By making some more assumptions on the data, we can simplify the computation of the mutual information terms drastically.
 
 * **Assumption 2**: All features are pairwise class-conditionally independent, i.e.
 $$
@@ -94,7 +94,7 @@ These parameters actually specify a family of mutual information-based criteria,
 * Maximum relevancy minimum redundancy (MRMR): $$\alpha = \frac{1}{t - 1}$$ and $$\beta = 0$$.
 * Mutual information maximisation (MIM): $$\alpha = 0$$ and $$\beta = 0$$.
 
-Each of these criteria make different assumptions, and we can see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of the assumptions.
+Each of these criteria make different assumptions, and we can see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of the assumptions 2 and 3 from above.
 
 * A value of $$\alpha$$ closer to zero indicates a stronger belief in Assumption 3.
 * A value of $$\beta$$ closer to zero indicates a stronger belief in Assumption 2.
