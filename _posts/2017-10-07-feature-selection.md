@@ -3,9 +3,9 @@ layout: post
 title: "Mutual information based feature selection"
 ---
 
-Although [model selection](https://thuijskens.github.io/2016/12/29/bayesian-optimisation/) plays an important role in learning a signal from some input data, it is arguably even more important to give the algorithm the right input data. The first step for a data scientist, is to construct relevant features by doing appropriate feature engineering. The resulting data set, typically high-dimensional, can then be used as input for a statistical learner.
+Although [model selection](https://thuijskens.github.io/2016/12/29/bayesian-optimisation/) plays an important role in learning a signal from some input data, it is arguably even more important to give the algorithm the *right* input data. When building a model, the first step for a data scientist is typically to construct relevant features by doing appropriate feature engineering. The resulting data set, which is typically high-dimensional, can then be used as input for a statistical learner.
 
-Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can be fooled by all the weird correlations present in your data. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selection helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
+Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can be fooled by all the weird dependencies present in your data. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selection helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
 
 ## Filter methods
 
