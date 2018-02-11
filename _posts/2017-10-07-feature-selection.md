@@ -9,15 +9,15 @@ Although we'd like to think of these learners as smart, and sophisticated, algor
 
 ## Filter methods
 
-In the above setting, we typically have a high dimensional data matrix $$X \in \mathbb{R}^{n \times p}$$, and a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$X_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
+In the above setting, we typically have a high dimensional data matrix $$\textbf{X} \in \mathbb{R}^{n \times p}$$, and a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$\textbf{X}_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
 
 In general, we can divide feature selection algorithms as belonging to one of three classes:
 
-1. **Wrapper methods** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a linear model with different combinations of the features, and picking the features resulting in the best out-of-sample performance, would be an example of a wrapper model.
-2. **Filter methods** do not use a learning algorithm on the original data $$X$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
+1. **Wrapper methods** use learning algorithms on the original data $$\textbf{X}$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a linear model with different combinations of the features, and picking the features resulting in the best out-of-sample performance, would be an example of a wrapper model.
+2. **Filter methods** do not use a learning algorithm on the original data $$\textbf{X}$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
 3. **Embedded methods** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
 
-In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to this problem.
+In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$\textbf{X}_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to this problem.
 
 <!--excerpt-->
 
@@ -27,7 +27,7 @@ Mutual information is a measure between two (possibly multi-dimensional) random 
 
 $$ I(X; Y) = \int_X \int_Y p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy, $$
 
-where $$p(x, y)$$ is the joint probability density function of $$X$$ and $$Y$$, and where $$p(x)$$ and $$p(y)$$ are the marginal density functions. The mutual information determines how similar the joint distribution $$p(x, y)$$ is to the products of the factored marginal distributions. If $$X$$ and $$Y$$ are completely unrelated (and therefore independent), $p(x, y) = p(x) p(y)$, and this integral would equal zero.
+where $$p(x, y)$$ is the joint probability density function of $$X$$ and $$Y$$, and where $$p(x)$$ and $$p(y)$$ are the marginal density functions. The mutual information determines how similar the joint distribution $$p(x, y)$$ is to the products of the factored marginal distributions. If $$X$$ and $$Y$$ are completely unrelated (and therefore independent), then $$p(x, y)$$ would equal $$p(x) p(y)$$, and this integral would be zero.
 
 When it comes to feature selection, we would like to maximise the mutual information between the subset of selected features $$\textbf{X}_S$$ and the target variable $$y$$
 
@@ -41,17 +41,17 @@ The simplest approach to solve this optimisation problem, is a greedy forward st
 
 Let $$S^{t - 1} = \{x_{f_1}, \ldots, x_{f_{t - 1}}\}$$ be the set of selected features at time step $$t - 1$$. The greedy method selects the next feature $$f_t$$ such that
 
-$$ f_t = \arg\max_{i \notin S^{t - 1}} I(\textbf{X}_{S^{t - 1} \cup i} ; y) $$
+$$ f_t = \arg\max_{i \notin S^{t - 1}} I(\textbf{X}_{S^{t - 1} \cup i} ; y). $$
 
 Greedy feature selection thus selects the features that at each step results in the biggest increase in the joint mutual information. Computing the joint mutual information involves integrating over a $$(t - 1)$$-dimensional space, which quickly becomes intractable computationally. To make this computation a bit easier, we can make the following assumption on the data:
 
 * **Assumption 1**: The selected features $$\textbf{X}_S$$ are independent and class-conditionally independent given the unselected feature $$\textbf{X}_k$$ under consideration.
 
-This assumptions allows us to decompose the mutual information term into something that is a bit more tractable (I've omitted the proof here for brevity, but it follows from the computation rules of the mutual information):
+This assumption allows us to decompose the mutual information term into something that is a bit more tractable (I've omitted the proof here for brevity, but it follows from the computation rules of the mutual information):
 
 $$ f_t = \arg\max_{i \notin S^{t - 1}} \underbrace{I(x_i; y)}_{\text{relevancy}} - \underbrace{\left[I(x_i; x_{S^{t - 1}}) - I(x_i; x_{S^{t - 1}} | y) \right]}_{\text{redundancy}}.$$
 
-This gives us a key insight into what algorithms that make assumption 1 are optimisng for. Optimising this criterion results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
+This gives us a key insight into what algorithms that make Assumption 1 are optimising for. Optimising this criterion results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
 
 ## Lower-dimensional approximation
 
@@ -93,7 +93,7 @@ p(x_i x_j) = p(x_i) p(x_j)
 $$
   This implies that $$\sum I(X_j; X_k)$$ will be zero.
 
-We can now see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of these assumptions.
+We can now see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of these assumptions:
 
 * A value of $$\alpha$$ closer to zero indicates a stronger belief in Assumption 3.
 * A value of $$\beta$$ closer to zero indicates a stronger belief in Assumption 2.
