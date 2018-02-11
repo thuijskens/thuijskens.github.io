@@ -13,63 +13,49 @@ In the above setting, we typically have a high dimensional data matrix $$X \in \
 
 In general, we can divide feature selection algorithms as belonging to one of three classes:
 
-1. **Wrapper methods** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a random forest on the data $$(X, y)$$, and selecting relevant features based on the feature importances would be an example of a wrapper model.
+1. **Wrapper methods** use learning algorithms on the original data $$X$$, and selects relevant features based on the (out-of-sample) performance of the learning algorithm. Training a linear model with different combinations of the features, and picking the features resulting in the best out-of-sample performance, would be an example of a wrapper model.
 2. **Filter methods** do not use a learning algorithm on the original data $$X$$, but only consider statistical characteristics of the input data. For example, we can select the features for which the correlation between the feature and the target variable exceeds a correlation threshold.
 3. **Embedded methods** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
 
-In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to the problem.
+In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$X_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to this problem.
 
 <!--excerpt-->
 
 ## Joint mutual information
 
-Mutual information is a measure between two (possible multi-dimensional) random variables $$X$$ and $$Y$$, that quantifies the amount of information obtained about one random variable, through the other random variable. The mutual information is given by
+Mutual information is a measure between two (possibly multi-dimensional) random variables $$X$$ and $$Y$$, that quantifies the amount of information obtained about one random variable, through the other random variable. The mutual information is given by
 
 $$ I(X; Y) = \int_X \int_Y p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy, $$
 
-where $$p(x, y)$$ is the joint probability density function of $$X$$ and $$Y$$, and where $$p(x)$$ and $$p(y)$$ are the marginal density functions. The mutual information determines how similar the joint distribution $$p(x, y)$$ is to the products of the factored marginal distributions.
+where $$p(x, y)$$ is the joint probability density function of $$X$$ and $$Y$$, and where $$p(x)$$ and $$p(y)$$ are the marginal density functions. The mutual information determines how similar the joint distribution $$p(x, y)$$ is to the products of the factored marginal distributions. If $$X$$ and $$Y$$ are completely unrelated (and therefore independent), $p(x, y) = p(x) p(y)$, and this integral would equal zero.
 
-When it comes to feature selection, we would like to maximise the
-**joint mutual information** between the subset of selected features $$X_S$$, and the target $$y$$
+When it comes to feature selection, we would like to maximise the mutual information between the subset of selected features $$\textbf{X}_S$$ and the target variable $$y$$
 
-$$ \tilde{S} = \arg \max_S I(X_S; y), \quad\quad s.t. |S| = k, $$
+$$ \tilde{S} = \arg \max_S I(\textbf{X}_S; y), \quad\quad s.t. |S| = k, $$
 
-where $$k$$ is the number of features we want to select. This is an NP-hard optimisation problem, because the set of possible combinations of features grows exponentially.
+where $$k$$ is the number of features we want to select.  This quantity is called the **joint mutual information**, and maximising this quantity is an NP-hard optimisation problem, because the set of possible combinations of features grows exponentially.
 
 ## Greedy solution to the feature selection problem
 
-The simplest approach to solve this optimisation problem, is by using a greedy forward step-wise selection algorithm. Here, features are selected incrementally, one feature at a time.
+The simplest approach to solve this optimisation problem, is a greedy forward step-wise selection algorithm. Here, features are selected incrementally, one feature at a time.
 
 Let $$S^{t - 1} = \{x_{f_1}, \ldots, x_{f_{t - 1}}\}$$ be the set of selected features at time step $$t - 1$$. The greedy method selects the next feature $$f_t$$ such that
 
-$$ f_t = \arg\max_{i \notin S^{t - 1}} I(X_{S^{t - 1} \cup i} ; y) $$
+$$ f_t = \arg\max_{i \notin S^{t - 1}} I(\textbf{X}_{S^{t - 1} \cup i} ; y) $$
 
-Greedy feature selection thus selects the features that at each step results in the biggest increase in the joint mutual information. Computing the joint mutual information involves integrating over a high-dimensional space, which quickly becomes intractable computationally. To make this computation a bit easier, we make the following assumption on the data:
+Greedy feature selection thus selects the features that at each step results in the biggest increase in the joint mutual information. Computing the joint mutual information involves integrating over a $$(t - 1)$$-dimensional space, which quickly becomes intractable computationally. To make this computation a bit easier, we can make the following assumption on the data:
 
-* **Assumption 1**: The selected features $$X_S$$ are independent and class-conditionally independent given the unselected feature $$X_k$$ under consideration.
+* **Assumption 1**: The selected features $$\textbf{X}_S$$ are independent and class-conditionally independent given the unselected feature $$\textbf{X}_k$$ under consideration.
 
-Under this assumption one can show, by decomposing the mutual information term, that solving the above problem is the same as solving
+This assumptions allows us to decompose the mutual information term into something that is a bit more tractable (I've omitted the proof here for brevity, but it follows from the computation rules of the mutual information):
 
 $$ f_t = \arg\max_{i \notin S^{t - 1}} \underbrace{I(x_i; y)}_{\text{relevancy}} - \underbrace{\left[I(x_i; x_{S^{t - 1}}) - I(x_i; x_{S^{t - 1}} | y) \right]}_{\text{redundancy}}.$$
 
-Optimising this criterion results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
+This gives us a key insight into what algorithms that make assumption 1 are optimisng for. Optimising this criterion results in trading off the *relevance* of a new feature $$x_i$$ with respect to the target $$y$$, against the *redundancy* of that information compared to the information contained in the variables $$X_{S^{t - 1}}$$ that are already selected.
 
 ## Lower-dimensional approximation
 
-Even with the above simplification of the joint mutual information, the quantities involving $$S^{t - 1}$$ are still $$(t - 1)$$-dimensional integrals. By making some more assumptions on the data, we can simplify the computation of the mutual information terms drastically.
-
-* **Assumption 2**: All features are pairwise class-conditionally independent, i.e.
-$$
-p(x_i x_j | y) = p(x_i | y)p(x_j | y)
-$$
-  This implies that $$\sum I(X_j; X_k | y)$$ will be zero.
-* **Assumption 3**: All features are pairwise independent, i.e.
-$$
-p(x_i x_j) = p(x_i) p(x_j)
-$$
-  This implies that $$\sum I(X_j; X_k)$$ will be zero.
-
-To make the problem tractable, almost all approaches in the literature use the above assumptions to propose the following low-order approximations
+Even with the above simplification of the joint mutual information, the quantities involving $$S^{t - 1}$$ are still $$(t - 1)$$-dimensional integrals. To make the problem more tractable, many approaches in the literature propose one, or both, of the following low-order approximations
 
 $$
 \begin{align}
@@ -94,17 +80,32 @@ These parameters actually specify a family of mutual information-based criteria,
 * Maximum relevancy minimum redundancy (MRMR): $$\alpha = \frac{1}{t - 1}$$ and $$\beta = 0$$.
 * Mutual information maximisation (MIM): $$\alpha = 0$$ and $$\beta = 0$$.
 
-Each of these criteria make different assumptions, and we can see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of the assumptions 2 and 3 from above.
+The different values of $$\alpha$$ and $$\beta$$ have implications on what you're assuming the probabilistic structure of your data looks like. They correspond to either (or both) of the following assumptions.
+
+* **Assumption 2**: All features are pairwise class-conditionally independent, i.e.
+$$
+p(x_i x_j | y) = p(x_i | y)p(x_j | y)
+$$
+  This implies that $$\sum I(X_j; X_k | y)$$ will be zero.
+* **Assumption 3**: All features are pairwise independent, i.e.
+$$
+p(x_i x_j) = p(x_i) p(x_j)
+$$
+  This implies that $$\sum I(X_j; X_k)$$ will be zero.
+
+We can now see that $$\alpha$$ and $$\beta$$ control the degree of belief in one of these assumptions.
 
 * A value of $$\alpha$$ closer to zero indicates a stronger belief in Assumption 3.
 * A value of $$\beta$$ closer to zero indicates a stronger belief in Assumption 2.
 * All variable selection criteria make Assumption 1.
 
+## Practical advice
+
 Brown et al (2012)[^1] perform a number of experiments in which they compare the different algorithms against each other. They find that algorithms that balance the relative magnitude of relevancy against redundancy, tend to perform well in terms of stability and the accuracy of the final learning algorithm. They suggest that the JMI, and MRMR, criteria should be the go-to mutual information based criteria to consider for feature selection.
 
 In practice, your results will not only depend on the criterion used. Even though we have reduced the computation of the full joint mutual information to pairwise (conditional) mutual information terms, their computation is still non-trivial and forms an area of active research. An interesting recent contribution has been made by Gao et al (2017)[^2], implementation [here](https://github.com/wgao9/mixed_KSG), where they propose an estimator that handles the case where $$X$$ and $$Y$$ can both be a mixture of a continuous and discrete distribution. More estimators of $$I(X; Y)$$ exist in the literature, and the accuracy of the approximation you use will influence the results of your feature selection algorithm.
 
-## Practical advice
+## Conclusion
 
 No single method will always work out of the box on any new problem. So how can we decide on the type of feature selection algorithm, a filter or embedded method, to use? Some things to take into consideration in practice are:
 
