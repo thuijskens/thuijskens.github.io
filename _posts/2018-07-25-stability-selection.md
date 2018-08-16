@@ -55,7 +55,7 @@ When the stability score for a variable exceeds the threshold $$\pi_\text{thr}$$
 
 ## Implementing it in Python
 
-Stability selection is actually straightforward to implement. If you have an implementation of the base learner available, an implementation can wrap around that and it is only necessary to write the bootstrapping and scoring code. Both of these two steps don't require sophisticated mathematics. Roughly speaking, an implementation could look as follows:
+Stability selection is actually relatively straightforward to implement. If you have an implementation of the base learner available, the algorithm can wrap around that and it is only necessary to write the bootstrapping and scoring code. Both of these two steps don't require sophisticated mathematics. Roughly speaking, an implementation could look as follows:
 
 ```python
 import numpy as np
@@ -93,7 +93,7 @@ def stability_selection(lasso, alphas, n_bootstrap_iterations,
   return stability_scores
 ```
 
-I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/thuijskens/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute once fitted:
+I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/thuijskens/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute after fitting:
 
 ```python
 base_estimator = Pipeline([
@@ -110,11 +110,11 @@ print(selector.get_support(indices=True))
 A useful diagnostic for stability selection is plotting the *stability path*. This is similar to plotting the LASSO path, and it is a plot of the stability scores versus the values of the penalization parameter, plotted for every variable.
 
 {: .center-image }
-![]({{ BASE_PATH }}/images/2018_08_15/stability-selection-schematic.png)
+![]({{ BASE_PATH }}/images/2018_08_15/stability-path.png)
 
-The above figure is taken from the original stability selection paper[^1]. It can be used to understand how stable the scores are, and can also help distinguish within the set of selected variables which variables are more important.
+The above figure is taken from the original stability selection paper[^1]. It can be used to understand how stable the scores are, and can also help distinguish which variables are more important, within the set of selected variables.
 
-## Bells and whistles
+## Bells and whistles
 
 Note that there are some bells and whistles that can be added to an implementation of stability selection:
 
