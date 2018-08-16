@@ -31,14 +31,14 @@ To make the above more precise, we have to dive into the mathematical details. T
 
 The algorithm consists of two steps. In the **sampling** step the selection probabilities, or *stability scores*, are computed as follows. For each value $$\lambda \in \Lambda$$ do:
 
-1. For each $$i$$ in $$1, \ldots, N$$, do:
+* For each $$i$$ in $$1, \ldots, N$$, do:
 
-  1. Generate a bootstrap sample of the original data $$X^{n \times p}$$ of size $$\frac{n}{2}$$.
-  2. Run the selection algorithm on the bootstrap sample with regularization parameter $$\lambda$$ to get the selection set $$\hat{S}_i^\lambda$$.
+  * Generate a bootstrap sample of the original data $$X^{n \times p}$$ of size $$\frac{n}{2}$$.
+  * Run the selection algorithm on the bootstrap sample with regularization parameter $$\lambda$$ to get the selection set $$\hat{S}_i^\lambda$$.
 
-2. Given the selection sets from each subsample, calculate the empirical selection probability for each model component:
+* Given the selection sets from each subsample, calculate the empirical selection probability for each model component:
 
-$$\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}$$.
+$$\hat{\Pi}^\lambda_k = \mathbb{P}[k \in \hat{S}^\lambda] = \frac{1}{N} \sum_{i = 1}^N \mathbb{I}_{\{k \in \hat{S}_i^\lambda\}}$$
 
 In the **scoring** step we then compute the set of stable features according to the following definition
 
