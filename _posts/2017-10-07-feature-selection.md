@@ -7,6 +7,8 @@ Although [model selection](https://thuijskens.github.io/2016/12/29/bayesian-opti
 
 Although we'd like to think of these learners as smart, and sophisticated, algorithms, they can be fooled by all the weird dependencies present in your data. A data scientist has to make the signal as easily identifiable as possible for the model to learn it. In practice, this means that **feature selection** is an important preprocessing step. Feature selection helps to zone in on the relevant variables in a data set, and can also help to eliminate collinear variables. It helps reduce the noise in the data set, and it helps the model pick up the relevant signals.
 
+<!--excerpt-->
+
 ## Filter methods
 
 In the above setting, we typically have a high dimensional data matrix $$\textbf{X} \in \mathbb{R}^{n \times p}$$, and a target variable $$y$$ (discrete or continuous). A feature selection algorithm will select a subset of $$k << p$$ columns, $$\textbf{X}_S \in \mathbb{R}^{n \times k}$$, that are most relevant to the target variable $$y$$.
@@ -18,8 +20,6 @@ In general, we can divide feature selection algorithms as belonging to one of th
 3. **Embedded methods** are a catch-all group of techniques which perform feature selection as part of the model construction process. The LASSO is an example of an embedded method.
 
 In this blog post I will focus on filter methods, and in particular I'll look at filter methods that use an entropy measure called **mutual information** to assess which features should be included in the reduced data set $$\textbf{X}_S$$. The resulting criterion results in an NP-hard optimisation problem, and I'll discuss several ways in which we can try to find optimal solutions to this problem.
-
-<!--excerpt-->
 
 ## Joint mutual information
 
