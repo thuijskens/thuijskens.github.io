@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Seeing through the noise with stability selection"
+title: "Filtering the noise with stability selection"
 ---
 
 In the previous [blog post](https://thuijskens.github.io/2017/10/07/feature-selection/), I discussed different types of feature selection methods and I focussed on mutual information based methods. I've since done a broader talk on feature selection at [PyData London](https://www.youtube.com/watch?v=JsArBz46_3s&index=20&list=PLGVZCDnMOq0ovNxfxOqYcBcQOIny9Zvb-). In the talk, I discussed an example of an embedded feature selection method called *stability selection*, a method that tends to work well in high-dimensional, sparse, problems.
