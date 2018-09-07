@@ -93,7 +93,7 @@ def stability_selection(lasso, alphas, n_bootstrap_iterations,
   return stability_scores
 ```
 
-I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/thuijskens/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute after fitting:
+I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/scikit-learn-contrib/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute after fitting:
 
 ```python
 base_estimator = Pipeline([
