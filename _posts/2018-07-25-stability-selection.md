@@ -1,17 +1,17 @@
 ---
 layout: post
-title: "Seeing through the noise with stability selection"
+title: "Filtering the noise with stability selection"
 ---
 
-In the previous [blog post](https://thuijskens.github.io/2017/10/07/feature-selection/), I discussed the different types of feature selection methods and I focussed on mutual information based methods. I've since done a broader talk on feature selection at [PyData London](https://www.youtube.com/watch?v=JsArBz46_3s&index=20&list=PLGVZCDnMOq0ovNxfxOqYcBcQOIny9Zvb-). I discussed an example of an embedded feature selection method called *stability selection*, a method that tends to work well in high-dimensional, sparse, problems.
+In the previous [blog post](https://thuijskens.github.io/2017/10/07/feature-selection/), I discussed different types of feature selection methods and I focussed on mutual information based methods. I've since done a broader talk on feature selection at [PyData London](https://www.youtube.com/watch?v=JsArBz46_3s&index=20&list=PLGVZCDnMOq0ovNxfxOqYcBcQOIny9Zvb-). In the talk, I discussed an example of an embedded feature selection method called *stability selection*, a method that tends to work well in high-dimensional, sparse, problems.
 
 <!--excerpt-->
 
-Embedded methods are a catch-all group of techniques which perform feature selection as part of the model construction process. They typically take the interaction between feature subset search and the learning algorithm into account, at the cost of extra computational time.
+Embedded methods are a catch-all group of techniques that perform feature selection as part of the model construction process. They typically take the interaction between feature subset search and the learning algorithm into account, at the cost of extra computational time.
 
 ## Structure learning
 
-Stability selection[^1] wraps around an existing structure learning algorithm, and tries to enhance and improve it. Structure learning can take different forms, but one example is the LASSO algorithm for supervised regression. Here, the algorithm tries to determine which features relate to the target variable, and the (covariance) structure is defined by the set of features with non-zero values for their coefficients in the final linear model.
+Stability selection[^1] wraps around an existing structure learning algorithm, and tries to enhance and improve it. The goal of these kind of algorithms is to learn the underlying relationships of the data. Structure learning can take different forms, but one example is the LASSO algorithm for supervised regression. Here, the algorithm tries to determine which features relate to the target variable, and the (covariance) structure is then defined as the set of features with non-zero values for their coefficients in the final linear model.
 
 Other examples of such structure learning algorithms are:
 
@@ -49,7 +49,7 @@ where $$\pi_\text{thr}$$ is a predefined threshold. The algorithm is also repres
 {: .center-image }
 ![]({{ BASE_PATH }}/images/2018_08_15/stability-selection-schematic.png)
 
-The base algorithm is run on every bootstrap sample for a *grid* of values of the penalization parameter, and not just a single value. A-priori we don't know what the right level of regularization for a problem is. If a variable is related to the target variable in a meaningful way, it should show up in most bootstrap samples for at least one value of the penalization parameter.
+The base algorithm is run on every bootstrap sample for a *grid* of values of the penalization parameter, and not just a single value. A-priori we don't know what the right level of regularization for a problem is. If a variable is related to the target variable in a meaningful way, it should show up in most bootstrap samples for *at least one value* of the penalization parameter.
 
 When the stability score for a variable exceeds the threshold $$\pi_\text{thr}$$ for one value in $$\Lambda$$, it is deemed stable. This means that some **regularization is necessary**. In specific cases one can obtain minimum bounds (as obtained in the Meinshausen and Buhlmann paper), but in general this requires some fiddling around with the mathematical details.
 
@@ -93,7 +93,7 @@ def stability_selection(lasso, alphas, n_bootstrap_iterations,
   return stability_scores
 ```
 
-I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/thuijskens/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute after fitting:
+I've put a Python implementation of stability selection with a scikit-learn compatible API on [my GitHub](https://github.com/scikit-learn-contrib/stability-selection). Since stability selection is model-agnostic, you can plug in any scikit-learn estimator that has a `coef_` or `feature_importances_` attribute after fitting:
 
 ```python
 base_estimator = Pipeline([
