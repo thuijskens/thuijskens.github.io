@@ -7,7 +7,7 @@ The responsibilities of a data scientist can be very diverse, and people have wr
 
 Regardless of what the responsibilities of a data scientist are, code is a main (by)product of his or her work. Whether the scientist is producing ad-hoc analyses for a business stakeholder, or building a machine learning model sitting behind a REST API, the main output is always code. When it comes to poor coding quality, some data scientists will say that they are working on one-off, ad-hoc, analyses or proof-of-concept (PoC) modelling pipelines.
 
-This is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you or a different team can push it to production without pain. Businesses care about impact that is realised by analytics, and writing production-grade code is the way to do that.
+This is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you or a different team can push it to production without pain. Businesses only care about impact that is realised by analytics, and writing production-grade code is the way to do that.
 
 <!--excerpt-->
 
@@ -30,13 +30,13 @@ Production code is going to be used and read by many others, instead of just you
 
 These are challenges the software engineering world has already encountered, and it helps to look at how this field tackles them. I'll discuss some tools that can give you an immediate positive impact on the quality of your work (if you are data scientist) or the quality of your team (if you are a data science manager).
 
-Some of these may seem daunting to learn initially, but for a lot of these tools you can copy templates from your first projects to your other projects. All it takes therefore is a one-time investment to learn some useful tools and paradigms, that will pay dividends throughout your career as a DS.
+Some of these may seem daunting to learn initially, but for a lot of these tools you can copy templates from your first projects to your other projects. All it takes therefore is a one-time investment to learn some useful tools and paradigms, that will pay dividends throughout your career as a data scientist.
 
 To help you get started with these tools, I have set up a [bare-bones repository](https://github.com/thuijskens/production-tools) that contains basic template files for some of the tools that I will discuss.
 
 ## Reproducible code
 
-When you setup the codebase for your new shiny data science project, you should immediately set up the following tools:
+When you setup the codebase for your shiny new data science project, you should immediately set up the following tools:
 
 - **Version control** your codebase using `git` or a similar tool.
   - The first thing you should do is to set up a version controlled repository on a remote server, so that each team member can pull an up-to-date version of the code. A great, 5 minute introduction to git can be found [here](http://rogerdudler.github.io/git-guide/).
@@ -87,4 +87,4 @@ Finally, ensure that the environment you develop your code in is reasonably simi
 
 **Data scientists**, adopt these standards and see your employability increase, and complaints by your more software engineering-focussed colleagues decrease. You'll spend less time worrying about reproducibility, and rewriting software so that it can make it to production. The time saved here can be used to focus more on the fun part of our job: building models.
 
-**Data science managers**, consider giving your team members a couple of days to get up to speed with these tools, and you will see that your codebases become more stable. It will be easier to onboard new members to your team and you will spend less time translating initial insights to production pipelines. Having a common way of working will also allow your team to start building utilities that tap into these conventions.
+**Data science managers**, consider giving your team members a couple of days to get up to speed with these tools, and you will see that your codebases become more stable. It will be easier to onboard new members to your team and you will spend less time translating initial insights to production pipelines. Having a common way of working will also allow your team to start building utilities that tap into these conventions, increasing the productivity of your team.
