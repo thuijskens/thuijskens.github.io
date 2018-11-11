@@ -9,6 +9,8 @@ Regardless of what the responsibilities of a data scientist are, code is a main 
 
 This is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you or a different team can push it to production without pain. Businesses care about impact that is realised by analytics, and writing production-grade code is the way to do that.
 
+<!--excerpt-->
+
 Whatever type of data scientist you are, the code you write is in my opinion therefore only useful if it is **production code**. Here, I interpret production code in a wider sense than the interpretation I typically see, which is code that goes into a customer-facing application. The following are all representative tasks of a data scientist's work that I consider production:
 
   - Code for a weekly report that is sent out to a whole business unit.
