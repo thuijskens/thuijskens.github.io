@@ -17,7 +17,9 @@ Whatever type of data scientist you are, the code you write is in my opinion the
   - An interesting customer-level feature (maybe an embedding) that explains some variance in a KPI.
   - Modelling pipelines that dump scores daily in a CRM database.
 
-There are many more, and they most of the outputs a data scientist produces. Data scientists should therefore always strive to write production code.
+There are many more, and they cover most of the outputs a data scientist produces. Data scientists should therefore always strive to write production code.
+
+## Production code
 
 It is hard to give a general definition of what production code is, but in general data scientists should aim for their code to be:
 
@@ -30,7 +32,7 @@ These are challenges the software engineering world has already encountered, and
 
 Some of these may seem daunting to learn initially, but for a lot of these tools you can copy templates from your first projects to your other projects. All it takes therefore is a one-time investment to learn some useful tools and paradigms, that will pay dividends throughout your career as a DS.
 
-To help you get started with these tools, I have set up a [bare-bones repository](https://github.com/thuijskens/production-tools) that has basic template files for some of the tools that I will discuss.
+To help you get started with these tools, I have set up a [bare-bones repository](https://github.com/thuijskens/production-tools) that contains basic template files for some of the tools that I will discuss.
 
 ## Reproducible code
 
@@ -40,8 +42,8 @@ When you setup the codebase for your new shiny data science project, you should 
   - The first thing you should do is to set up a version controlled repository on a remote server, so that each team member can pull an up-to-date version of the code. A great, 5 minute introduction to git can be found [here](http://rogerdudler.github.io/git-guide/).
   - Try to push code changes to the remote at a regular frequency (I would recommend daily, if possible).
   - **Do not work on a single branch**, whether you work alone or in a team. Choose a [git branching workflow](https://www.atlassian.com/git/tutorials/comparing-workflows) you like (it doesn't really matter which one, just use one!) and stick with it.
-- Create a **reproducible python environment** with `virtualenv` or `conda`:
-  - These tools take a configuration file (a `requirements.txt` in case of virtualenv, or a `environment.yml` in case of conda) that contains a list of the packages (with version numbers!).
+- Create a **reproducible python environment** with `virtualenv` or `conda`.
+  - These tools take a configuration file (a `requirements.txt` in case of `virtualenv`, or a `environment.yml` in case of `conda`) that contains a list of the packages (with version numbers!).
   - Put this file in version control and distribute it across your team to ensure everybody is working in the same environment.
   - Consider coming up with a standard base environment so that you can reuse that whenever you or a team member start a new project.
   - **Example**: See the git repo [here](https://github.com/thuijskens/production-tools/blob/master/requirements.txt).
@@ -54,16 +56,15 @@ When you setup the codebase for your new shiny data science project, you should 
 
 After you have set up your project in a reproducible way, take the following steps to ensure that it is easy for other people to read through it.
 
-- Adopt a **common project structure**:
+- Adopt a **common project structure**.
   - A common structure will make it easy for both new team members, as well as other colleagues, to understand your codebase.
-  - The specifics of the project structure again don't matter much, just choose one and stick with it. The below are great starting points:
-    - [Cookiecutter](http://drivendata.github.io/cookiecutter-data-science/).
-    - [Satalia](https://github.com/Satalia/production-data-science).
-- Choose a **coding convention**, and configure a linter to enforce it pre-commit.
+  - The specifics of the project structure again don't matter much, just choose one and stick with it. The below are great starting points. The templates from [Cookiecutter](http://drivendata.github.io/cookiecutter-data-science/) and [Satalia](https://github.com/Satalia/production-data-science) are great starting points.
+- Choose a **coding style convention**, and configure a linter to enforce it (potentially pre-commit).
   - Enforcing code conventions will make it easier for other people to read your codebase. I would recommend using something like [PEP8](https://www.python.org/dev/peps/pep-0008/), as many people in industry will already be familiar with it.
-  - Enforcing coding conventions using a pre-commit linter is good, as the programmer will not have to worry about the conventions (the linter picks them up) and it will get rid of pull requests (PR) that are full with linting comments.
+  - Enforcing coding conventions using a pre-commit linter can be good, as the programmer will not have to worry too much about the conventions during programming, as the linter will pick it up.
+  - Using a linter will avoid pull requests (PR) that are littered with coding style comments. These PRs are the worst to both review and receive a review for.
   - *Example*: [black pre-commit plugin](https://github.com/ambv/black) or [yapf](https://github.com/google/yapf).
-- **Use Sphinx** to automatically create the documentation of your codebase:
+- **Use Sphinx** to automatically create the documentation of your codebase.
   - Pick a common docstring format, I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which one you choose, just choose one and stick with it.
   - Use `sphinx-quickstart` to get an out-of-the-box configuration files, or copy the ones from [my repository](https://github.com/thuijskens/production-tools/tree/master/docs).
   - Using Sphinx can seem daunting at first, but it is one of those things that you set up once and then copy the default configuration files around for from project to project.
@@ -72,13 +73,13 @@ After you have set up your project in a reproducible way, take the following ste
 
 Finally, follow the below steps to ensure your codebase can be executed easily and robustly:
 
-- Use a **pipeline framework** for your engineering and modelling workflows:
+- Use a **pipeline framework** for your engineering and modelling workflows.
   - Frameworks like [Apache Airflow](https://airflow.apache.org/) and [Luigi](https://luigi.readthedocs.io/en/stable/) are a great way to make your code inherently modular.
-  - They allow you to build your workflow as a series of nodes in a graph, and usually give you stuff like dependency management and workflow execution for free.
-- Write **unit tests** for your codebase:
-  - Pick a unit testing framework (like [nose](https://nose.readthedocs.io/en/latest/) or [pytest](https://docs.pytest.org/en/latest/) and stick with it.
+  - They allow you to build your workflow as a series of nodes in a graph, and usually gives you stuff like dependency management and workflow execution for free.
+- Write **unit tests** for your codebase.
+  - Pick a unit testing framework (like [nose](https://nose.readthedocs.io/en/latest/) or [pytest](https://docs.pytest.org/en/latest/)) and stick with it.
   - Writing unit tests can be cumbersome, but you want these tests in your codebase to ensure everything behaves as expected! This is especially important in data science, where we deal a lot with black-box algorithms.
-- Consider adding **continuous integration** (CI) to your repository:
+- Consider adding **continuous integration** (CI) to your repository.
   - CI can be used to run your unit tests or pipeline after every commit or merge, making sure that no change to the codebase breaks it.
   - Many vendors offer integration with the code hosting platforms like GitHub or GitLab. All you need typically is a [configuration file](https://github.com/thuijskens/production-tools/blob/master/.circleci/config.yml) that is committed to your codebase, and you are ready to go!
 
