@@ -5,28 +5,26 @@ title: Data scientists, the only useful code is production code
 
 The responsibilities of a data scientist can be very diverse, and people have written in the past about the different types of data scientists that exist in the industry. The types of data scientists range from a more analyst-like role, to more software engineering-focused roles. It is partly due to the different responsibilities those jobs require, and the diverse backgrounds data scientists come from, that they sometimes have a bad reputation amongst peers when it comes to writing good quality code. Not everybody comes to data science with a software engineering background.
 
-Regardless of what the responsibilities of a data scientist are, code is a main (by)product of his or her work. Whether the scientist is producing ad-hoc analyses for a business stakeholder, or building a machine learning model sitting behind a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer), the main output is always code. When it comes to poor coding quality, some data scientists will say that they are working on one-off, ad-hoc, analyses or proof-of-concept (PoC) modelling pipelines.
-
-This is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you or a different team can push it to production without pain. Businesses only care about impact that is realised by analytics, and writing production-grade code is the way to do that.
+Regardless of what the responsibilities of a data scientist are, code is a main (by)product of his or her work. Whether the scientist is producing ad-hoc analyses for a business stakeholder, or building a machine learning model sitting behind a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer), the main output is always code. Since most data scientists don't come from a software engineering background, the quality of that code can vary a lot, causing issues with reproducibility and maintainability later down the line.
 
 <!--excerpt-->
 
-Whatever type of data scientist you are, the code you write is in my opinion therefore only useful if it is **production code**. Here, I interpret production code in a wider sense than the interpretation I typically see, which is code that goes into a customer-facing application. The following are all representative tasks of a data scientist's work that I consider production:
+When it comes to poor coding quality, some data scientists will say that their work does not touch a production system, and that their code therefore does not need to be of a high standard. However, I would argue that common outputs of a data scientist's work are actually in fact production:
 
-  - Code for a weekly report that is sent out to a whole business unit.
-  - An interesting customer-level feature (maybe an embedding) that explains some variance in a KPI.
-  - Modelling pipelines that dump scores daily in a CRM database.
+- The ad-hoc analysis that discusses a useful insight that was shown to a senior stakeholder may be used for a key financial decision. You may want to re-run that analysis in the future, and you can't tell him or her a month later that you can't reproduce the analysis because your codebase is incomprehensible.
+- The report that gets sent out every week to a whole business unit. Multiple teams will use that to base decisions on, so you would want the code that generates it to be well-tested.
+- The modelling pipeline you wrote that dumps scores daily into a CRM database has been so successful, that the business wants to roll it out to other teams. Other people now suddenly need to be able to read, extend and execute your codebase.
 
-There are many more, and they cover most of the outputs a data scientist produces. Data scientists should therefore always strive to write production code.
+Production code is any code that feeds some business process. Since data science by design is meant to affect business processes, most data scientists are in fact writing production code.
+
+Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the business processes data science touches, and the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business, and data scientists should therefore always strive to write good quality code, regardless of the goal. Whatever type of data scientist you are, the code you write is only useful if it is **production code**.
 
 ## Production code
 
-It is hard to give a general definition of what production code is, but in general data scientists should aim for their code to be:
+It is hard to give a general definition of what production code is, but a key difference is that production code gets read and executed by many other people, instead of just you. You should therefore aim for your code to be
 
   - **Reproducible**, because many people are going to run it.
   - **Modular** and **well-documented**, because many people are going to read it.
-
-Production code is going to be used and read by many others, instead of just you.
 
 These are challenges the software engineering world has already encountered, and it helps to look at how this field tackles them. I'll discuss some tools that can give you an immediate positive impact on the quality of your work (if you are data scientist) or the quality of your team (if you are a data science manager).
 
@@ -49,8 +47,8 @@ When you setup the codebase for your shiny new data science project, you should 
   - **Example**: See the git repo [here](https://github.com/thuijskens/production-tools/blob/master/requirements.txt).
 - **Drop Jupyter notebooks** as your **main** development tool.
   - Jupyter notebooks are great for quick exploration of the data you are working with, but do not use them as your main development tool.
-  - Notebooks do not encourage a reproducible workflow, see this [talk](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1) for a good overview of why they don't.
-  - Use a proper IDE like PyCharm or VS code when developing code. Convince your employer to buy you professional editions of this software (this is usually peanuts for the company, and can be a massive productivity boost). I develop most of my code locally, but use PyCharm's remote execution to execute any code on the cloud or an internal VM.
+  - Notebooks do not encourage a reproducible workflow, and you should see this [talk](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1) for a good overview of why they don't.
+  - Use a proper IDE like PyCharm or VS code (or vim if you're into that) when developing code. Convince your employer to buy you professional editions of this software (this is usually peanuts for the company, and can be a massive productivity boost). I develop most of my code locally, but use PyCharm's remote execution to execute any code on the cloud or an internal VM.
 
 ## Well-documented code
 
@@ -66,7 +64,7 @@ After you have set up your project in a reproducible way, take the following ste
   - *Example*: [black pre-commit plugin](https://github.com/ambv/black) or [yapf](https://github.com/google/yapf).
 - **Use Sphinx** to automatically create the documentation of your codebase.
   - Pick a common docstring format, I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which one you choose, just choose one and stick with it.
-  - Use `sphinx-quickstart` to get an out-of-the-box configuration files, or copy the ones from [my repository](https://github.com/thuijskens/production-tools/tree/master/docs).
+  - Use `sphinx-quickstart` to get a set of out-of-the-box configuration files, or copy the ones from [my repository](https://github.com/thuijskens/production-tools/tree/master/docs).
   - Using Sphinx can seem daunting at first, but it is one of those things that you set up once and then copy the default configuration files around for from project to project.
 
 ## Modular code
@@ -75,7 +73,7 @@ Finally, follow the below steps to ensure your codebase can be executed easily a
 
 - Use a **pipeline framework** for your engineering and modelling workflows.
   - Frameworks like [Apache Airflow](https://airflow.apache.org/) and [Luigi](https://luigi.readthedocs.io/en/stable/) are a great way to make your code inherently modular.
-  - They allow you to build your workflow as a series of nodes in a graph, and usually gives you stuff like dependency management and workflow execution for free.
+  - They allow you to build your workflow as a series of nodes in a graph, and usually gives you things like dependency management and workflow execution for free.
 - Write **unit tests** for your codebase.
   - Pick a unit testing framework (like [nose](https://nose.readthedocs.io/en/latest/) or [pytest](https://docs.pytest.org/en/latest/)) and stick with it.
   - Writing unit tests can be cumbersome, but you want these tests in your codebase to ensure everything behaves as expected! This is especially important in data science, where we deal a lot with black-box algorithms.
@@ -87,4 +85,27 @@ Finally, ensure that the environment you develop your code in is reasonably simi
 
 **Data scientists**, adopt these standards and see your employability increase, and complaints by your more software engineering-focused colleagues decrease. You'll spend less time worrying about reproducibility, and rewriting software so that it can make it to production. The time saved here can be used to focus more on the fun part of our job: building models.
 
-**Data science managers**, consider giving your team members a couple of days to get up to speed with these tools, and you will see that your codebases become more stable. It will be easier to onboard new members to your team and you will spend less time translating initial insights to production pipelines. Having a common way of working will also allow your team to start building utilities that tap into these conventions, increasing the productivity of your team.
+**Data science managers**, consider giving your team members a couple of days to get up to speed with these tools, and you will see that your codebases become more stable. It will be easier to onboard new members to your team and you will spend less time translating initial insights to production pipelines. Having a common way of working will also allow your team to start building utilities that tap into these conventions, increasing the overall productivity of your team.
+
+
+
+
+
+## left overs
+
+
+**The counter argument is: "Hey, my work actually doesn't touch production so why should I write production code??" --> all applications are production** This is what the below 2/3 paragraphs should convey
+
+When it comes to poor coding quality, some data scientists will say that they are working on one-off, ad-hoc, analyses or proof-of-concept (PoC) modelling pipelines. However, this is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC modelling pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you, or a different team, can push it to production without pain. Writing good quality code matters, no matter what goal it serves.
+
+Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business.
+
+Whatever type of data scientist you are, the code you write is in my opinion therefore only useful if it is **production code**. Here, I interpret production code in a wider sense than the interpretation I typically see, which is code that goes into an external customer-facing application. The following are all representative tasks of a data scientist's work that can be considered production:
+
+  - Code for a weekly report that is sent out to a whole business unit.
+  - An interesting customer-level feature (maybe an embedding) that explains some variance in a KPI.
+  - Modelling pipelines that dump scores daily in a CRM database.
+
+These outputs may not be seen by an external customer, but they go internal teams in the business that may take actions on those outputs that represent large financial value.
+
+Data scientists should therefore always strive to write production code.
