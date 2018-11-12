@@ -86,26 +86,3 @@ Finally, ensure that the environment you develop your code in is reasonably simi
 **Data scientists**, adopt these standards and see your employability increase, and complaints by your more software engineering-focused colleagues decrease. You'll spend less time worrying about reproducibility, and rewriting software so that it can make it to production. The time saved here can be used to focus more on the fun part of our job: building models.
 
 **Data science managers**, consider giving your team members a couple of days to get up to speed with these tools, and you will see that your codebases become more stable. It will be easier to onboard new members to your team and you will spend less time translating initial insights to production pipelines. Having a common way of working will also allow your team to start building utilities that tap into these conventions, increasing the overall productivity of your team.
-
-
-
-
-
-## left overs
-
-
-**The counter argument is: "Hey, my work actually doesn't touch production so why should I write production code??" --> all applications are production** This is what the below 2/3 paragraphs should convey
-
-When it comes to poor coding quality, some data scientists will say that they are working on one-off, ad-hoc, analyses or proof-of-concept (PoC) modelling pipelines. However, this is not a valid counter-argument. If an ad-hoc analysis showed a useful insight, there is a high chance you would want to re-run that analysis at a future point in time. You can't tell your senior stakeholder a month later that you can't reproduce your analysis because your codebase is incomprehensible. If your PoC modelling pipeline shows a meaningful lift on a key performance indicator (KPI), you would want the codebase to be clear and the results reproducible so that either you, or a different team, can push it to production without pain. Writing good quality code matters, no matter what goal it serves.
-
-Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business.
-
-Whatever type of data scientist you are, the code you write is in my opinion therefore only useful if it is **production code**. Here, I interpret production code in a wider sense than the interpretation I typically see, which is code that goes into an external customer-facing application. The following are all representative tasks of a data scientist's work that can be considered production:
-
-  - Code for a weekly report that is sent out to a whole business unit.
-  - An interesting customer-level feature (maybe an embedding) that explains some variance in a KPI.
-  - Modelling pipelines that dump scores daily in a CRM database.
-
-These outputs may not be seen by an external customer, but they go internal teams in the business that may take actions on those outputs that represent large financial value.
-
-Data scientists should therefore always strive to write production code.
