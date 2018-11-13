@@ -9,26 +9,26 @@ Regardless of what the responsibilities of a data scientist are, code is a main 
 
 <!--excerpt-->
 
-When it comes to poor coding quality, some data scientists will say that their work does not touch a production system, and that their code therefore does not need to be of a high standard. However, I would argue that common outputs of a data scientist's work are actually in fact production:
+When it comes to poor coding quality, some data scientists will say that their work does not touch a production system, and that their code therefore does not need to be of a high standard. However, I would argue that common outputs of a data scientist's work can actually be considered production:
 
-- The ad-hoc analysis that discusses a useful insight that was shown to a senior stakeholder may be used for a key financial decision. You may want to re-run that analysis in the future, and you can't tell him or her a month later that you can't reproduce the analysis because your codebase is incomprehensible.
+- The ad-hoc analysis that discusses a useful insight that was shown to a senior executive may be used for a key financial decision. You may want to re-run that analysis in the future, and you can't tell him or her a month later that you can't reproduce the analysis because your codebase is incomprehensible.
 - The report that gets sent out every week to a whole business unit. Multiple teams will use that to base decisions on, so you would want the code that generates it to be well-tested.
-- The modelling pipeline you wrote that dumps scores daily into a CRM database has been so successful, that the business wants to roll it out to other teams. Other people now suddenly need to be able to read, extend and execute your codebase.
+- The modelling pipeline you wrote that dumps scores daily into a CRM database. If your model gets enough traction, the business will want to roll it out to other teams. Other people now suddenly need to be able to read, extend and execute your codebase.
 
-Production code is any code that feeds some business process. Since data science by design is meant to affect business processes, most data scientists are in fact writing production code.
+Production code is any code that feeds some business (decision) process. Since data science by design is meant to affect business processes, most data scientists are in fact writing code that can be considered production.
 
-Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the business processes data science touches, and the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business, and data scientists should therefore always strive to write good quality code, regardless of the goal. Whatever type of data scientist you are, the code you write is only useful if it is **production code**.
+Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the business processes data science touches, and the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business, and data scientists should therefore always strive to write good quality code, regardless of the type of output they create. Whatever type of data scientist you are, the code you write is only useful if it is **production code**.
 
 ## Production code
 
-It is hard to give a general definition of what production code is, but a key difference is that production code gets read and executed by many other people, instead of just you. You should therefore aim for your code to be
+It is hard to give a general definition of what production code is, but a key difference is that production code gets read and executed by many other people, instead of just the person that wrote it. We should therefore aim for our code to be
 
   - **Reproducible**, because many people are going to run it.
   - **Modular** and **well-documented**, because many people are going to read it.
 
 These are challenges the software engineering world has already encountered, and it helps to look at how this field tackles them. I'll discuss some tools that can give you an immediate positive impact on the quality of your work (if you are data scientist) or the quality of your team (if you are a data science manager).
 
-Some of these may seem daunting to learn initially, but for a lot of these tools you can copy templates from your first projects to your other projects. All it takes therefore is a one-time investment to learn some useful tools and paradigms, that will pay dividends throughout your career as a data scientist.
+Some of these tools may seem daunting to learn initially, but for a lot of these you can copy templates that you create for your first project, to your other projects. All it takes therefore is a one-time investment to learn some useful tools and paradigms, that will pay dividends throughout your career as a data scientist.
 
 To help you get started with these tools, I have set up a [bare-bones repository](https://github.com/thuijskens/production-tools) that contains basic template files for some of the tools that I will discuss.
 
@@ -37,7 +37,7 @@ To help you get started with these tools, I have set up a [bare-bones repository
 When you setup the codebase for your shiny new data science project, you should immediately set up the following tools:
 
 - **Version control** your codebase using `git` or a similar tool.
-  - The first thing you should do is to set up a version controlled repository on a remote server, so that each team member can pull an up-to-date version of the code. A great, 5 minute introduction to git can be found [here](http://rogerdudler.github.io/git-guide/).
+  - The first thing you should do is to set up a version controlled repository on a remote server, so that each team member can pull an up-to-date version of the code. A great, 5 minute introduction to `git` can be found [here](http://rogerdudler.github.io/git-guide/).
   - Try to push code changes to the remote at a regular frequency (I would recommend daily, if possible).
   - **Do not work on a single branch**, whether you work alone or in a team. Choose a [git branching workflow](https://www.atlassian.com/git/tutorials/comparing-workflows) you like (it doesn't really matter which one, just use one!) and stick with it.
 - Create a **reproducible python environment** with `virtualenv` or `conda`.
@@ -52,18 +52,18 @@ When you setup the codebase for your shiny new data science project, you should 
 
 ## Well-documented code
 
-After you have set up your project in a reproducible way, take the following steps to ensure that it is easy for other people to read through it.
+After you have set up your project in a way that will support reproducibility, take the following steps to ensure that it is possible for other people to read and understand it.
 
 - Adopt a **common project structure**.
-  - A common structure will make it easy for both new team members, as well as other colleagues, to understand your codebase.
+  - A common structure will make it easy for both members of your team, as well as other colleagues, to understand your codebase.
   - The specifics of the project structure again don't matter much, just choose one and stick with it. The below are great starting points. The templates from [Cookiecutter](http://drivendata.github.io/cookiecutter-data-science/) and [Satalia](https://github.com/Satalia/production-data-science) are great starting points.
 - Choose a **coding style convention**, and configure a linter to enforce it (potentially pre-commit).
   - Enforcing code conventions will make it easier for other people to read your codebase. I would recommend using something like [PEP8](https://www.python.org/dev/peps/pep-0008/), as many people in industry will already be familiar with it.
-  - Enforcing coding conventions using a pre-commit linter can be good, as the programmer will not have to worry too much about the conventions during programming, as the linter will pick it up.
-  - Using a linter will avoid pull requests (PR) that are littered with coding style comments. These PRs are the worst to both review and receive a review for.
+  - Enforcing coding conventions using a pre-commit linter can be good, as the programmer will not have to worry too much about the conventions during programming, because the linter will pick it up.
+  - Using a linter will avoid pull requests (PRs) that are littered with coding style comments. These PRs are the worst to both review and receive a review for.
   - *Example*: [black pre-commit plugin](https://github.com/ambv/black) or [yapf](https://github.com/google/yapf).
 - **Use Sphinx** to automatically create the documentation of your codebase.
-  - Pick a common docstring format, I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which one you choose, just choose one and stick with it.
+  - Pick a common docstring format. I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which one you choose, just choose one and stick with it. Configure your IDE to use that docstring format, so that it will automatically create a template when you write a new function or class.
   - Use `sphinx-quickstart` to get a set of out-of-the-box configuration files, or copy the ones from [my repository](https://github.com/thuijskens/production-tools/tree/master/docs).
   - Using Sphinx can seem daunting at first, but it is one of those things that you set up once and then copy the default configuration files around for from project to project.
 
@@ -81,7 +81,7 @@ Finally, follow the below steps to ensure your codebase can be executed easily a
   - CI can be used to run your unit tests or pipeline after every commit or merge, making sure that no change to the codebase breaks it.
   - Many vendors offer integration with the code hosting platforms like GitHub or GitLab. All you need typically is a [configuration file](https://github.com/thuijskens/production-tools/blob/master/.circleci/config.yml) that is committed to your codebase, and you are ready to go!
 
-Finally, ensure that the environment you develop your code in is reasonably similar to the production environment the code is going to run in. Especially in companies where development, staging and production environments are not yet well-defined, I have seen teams developing code on architecture that is extremely different than the architecture the code actually has to run on in the end.
+Finally, ensure that the environment you develop your code in is reasonably similar to the production environment the code is going to run in. Especially in companies where development, staging and production environments for data science are not yet well-defined, I have seen teams developing code on architecture that is extremely different than the architecture the code actually has to run on in the end.
 
 **Data scientists**, adopt these standards and see your employability increase, and complaints by your more software engineering-focused colleagues decrease. You'll spend less time worrying about reproducibility, and rewriting software so that it can make it to production. The time saved here can be used to focus more on the fun part of our job: building models.
 
