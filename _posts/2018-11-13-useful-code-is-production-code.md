@@ -15,9 +15,7 @@ When it comes to poor coding quality, some data scientists will say that their w
 - The report that gets sent out every week to a whole business unit. Multiple teams will use that to base decisions on, so you would want the code that generates it to be well-tested.
 - The modelling pipeline you wrote that dumps scores daily into a CRM database. If your model gets enough traction, the business will want to roll it out to other teams. Other people now suddenly need to be able to read, extend and execute your codebase.
 
-Production code is any code that feeds some business (decision) process. Since data science by design is meant to affect business processes, most data scientists are in fact writing code that can be considered production.
-
-Many businesses are excited by the (financial) impact that data science can generate, but ultimately they only care about the business processes data science touches, and the impact that actually is *realised*. Writing production-grade code is the way to realise the potential value data science can give to the business, and data scientists should therefore always strive to write good quality code, regardless of the type of output they create. Whatever type of data scientist you are, the code you write is only useful if it is **production code**.
+Production code is any code that feeds some business (decision) process. Since data science by design is meant to affect business processes, most data scientists are in fact writing code that can be considered production. Data scientists should therefore always strive to write good quality code, regardless of the type of output they create. Whatever type of data scientist you are, the code you write is only useful if it is **production code**.
 
 ## Production code
 
