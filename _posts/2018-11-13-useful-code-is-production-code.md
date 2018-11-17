@@ -19,7 +19,7 @@ Production code is any code that feeds some business (decision) process. Since d
 
 ## Production code
 
-It is hard to give a general definition of what production code is, but a key difference is that production code gets read and executed by many other people, instead of just the person that wrote it. We should therefore aim for our code to be
+It is hard to give a general definition of what production code is, but a key difference with non-production code, is that production code gets read and executed by many other people, instead of just the person that wrote it. We should therefore aim for our code to be
 
   - **Reproducible**, because many people are going to run it.
   - **Modular** and **well-documented**, because many people are going to read it.
@@ -61,7 +61,7 @@ After you have set up your project in a way that will support reproducibility, t
   - Using a linter will avoid pull requests (PRs) that are littered with coding style comments. These PRs are the worst to both review and receive a review for.
   - *Example*: [black pre-commit plugin](https://github.com/ambv/black) or [yapf](https://github.com/google/yapf).
 - **Use Sphinx** to automatically create the documentation of your codebase.
-  - Pick a common docstring format. I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which one you choose, just choose one and stick with it. Configure your IDE to use that docstring format, so that it will automatically create a template when you write a new function or class.
+  - Pick a docstring format. I personally prefer [NumPyDoc](https://github.com/numpy/numpydoc), but there are others. Again it does not matter which format you choose, just choose one and stick with it. Configure your IDE to use that docstring format, so that it will automatically create a template when you write a new function or class.
   - Use `sphinx-quickstart` to get a set of out-of-the-box configuration files, or copy the ones from [my repository](https://github.com/thuijskens/production-tools/tree/master/docs).
   - Using Sphinx can seem daunting at first, but it is one of those things that you set up once and then copy the default configuration files around for from project to project.
 
