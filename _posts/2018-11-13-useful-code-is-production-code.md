@@ -54,7 +54,7 @@ After you have set up your project in a way that will support reproducibility, t
 
 - Adopt a **common project structure**.
   - A common structure will make it easy for both members of your team, as well as other colleagues, to understand your codebase.
-  - The specifics of the project structure again don't matter much, just choose one and stick with it. The below are great starting points. The templates from [Cookiecutter](http://drivendata.github.io/cookiecutter-data-science/) and [Satalia](https://github.com/Satalia/production-data-science) are great starting points.
+  - The specifics of the project structure again don't matter much, just choose one and stick with it. The templates from [Cookiecutter](http://drivendata.github.io/cookiecutter-data-science/) and [Satalia](https://github.com/Satalia/production-data-science) are great starting points.
 - Choose a **coding style convention**, and configure a linter to enforce it (potentially pre-commit).
   - Enforcing code conventions will make it easier for other people to read your codebase. I would recommend using something like [PEP8](https://www.python.org/dev/peps/pep-0008/), as many people in industry will already be familiar with it.
   - Enforcing coding conventions using a pre-commit linter can be good, as the programmer will not have to worry too much about the conventions during programming, because the linter will pick it up.
