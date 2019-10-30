@@ -7,6 +7,8 @@ There are a wealth of high-quality research tools available in the machine learn
 
 In the last few years, there have been a number of start-ups and initiatives addressing these issues. In particular, there has been a noticeable rise in the number of companies (Google's AutoML, DataRobot, SparkBeyond, SigOpt) and open-source solutions ([AutoWEKA](https://www.cs.ubc.ca/labs/beta/Projects/autoweka/), [auto-sklearn](https://github.com/automl/auto-sklearn), [SMAC](https://github.com/automl/SMAC3)) that provide automatic machine learning solutions (in production).
 
+<!--excerpt-->
+
 In itself this is a great marker of the professionalisation of machine learning, and it helps democratise the benefits machine learning can bring to a business. As more standardised solutions become available on the market, the technical know-how that is needed to deploy machine learning algorithms becomes more accessible to our colleagues in engineering and colleagues in non-technical disciplines.
 
 Sometimes, these products are however advertised as making the job of a data scientist completely redundant, and that all you need to apply machine learning to your business successfully is a person that knows how to call an API. This can be especially confusing to people with no industry experience. They often believe that data science only covers algorithmic modelling, and therefore can be fully automated. In reality, data scientists should not fear being made redundant anytime soon. Rather, they should welcome the advancements of automated machine learning methods, and the productivity boost they will bring to their workflow.
