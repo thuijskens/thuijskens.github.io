@@ -11,8 +11,10 @@ If you want to get in touch with me, you can contact me by [email](mailto:thomas
 
 ## Talks
 
-- [Bayesian optimisation with scikit-learn](https://www.youtube.com/watch?v=jtRPxRnOXnk&t=7s) at PyData London 2017.
+- [No more grid search! How to build models effectively](https://www.youtube.com/watch?v=q-vz2Z5UTtY) at London AI meetup in August 2019.
+- Injury prediction in elite sports at Data Science Croatia meetup in May 2019.
 - [Why giving your algorithm ALL THE FEATURES does not always work](https://www.youtube.com/watch?v=JsArBz46_3s&t=162s) at PyData London 2018.
+- [Bayesian optimisation with scikit-learn](https://www.youtube.com/watch?v=jtRPxRnOXnk&t=7s) at PyData London 2017.
 
 ## Papers
 
@@ -21,3 +23,4 @@ If you want to get in touch with me, you can contact me by [email](mailto:thomas
 ## Open-source
 
 - [stability-selection](https://github.com/scikit-learn-contrib/stability-selection): an implementation of the stability selection algorithm, compatible with the scikit-learn API and part of [scikit-learn-contrib](https://github.com/scikit-learn-contrib).
+- [scikit-hyperband](https://github.com/thuijskens/scikit-hyperband): an implementation of the hyperband algorithm for hyper-parameter optimisation, compatible with the scikit-learn API.
