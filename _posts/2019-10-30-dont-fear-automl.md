@@ -48,6 +48,6 @@ The latter benefit has an interesting side-effect. The more machine learning is 
 
 ## References
 
-[^1]: https://openreview.net/pdf?id=rJWF0Fywf
+[^1]: Sculley, D., et al. "Winner's curse? On pace, progress, and empirical rigor." (2018), https://openreview.net/pdf?id=rJWF0Fywf
 
 [^2]: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf
